@@ -11,6 +11,8 @@ class CommentController extends Controller
 {
     public function store(Request $request, Trip $trip)
     {
+        abort_unless($trip->visibility === 'public' || $trip->user_id === $request->user()->id, 403);
+
         $validator = Validator::make($request->all(), [
             'body' => 'required|string|max:2000',
         ]);

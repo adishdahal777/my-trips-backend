@@ -7,6 +7,7 @@ use App\Http\Resources\TripResource;
 use App\Models\Expense;
 use App\Models\Trip;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class ExpenseController extends Controller
@@ -38,18 +39,20 @@ class ExpenseController extends Controller
             return response()->json(['error' => $validator->errors()], 422);
         }
 
-        $trip->expenses()->create([
-            'description' => $request->description,
-            'amount' => $request->amount,
-            'currency' => $request->input('currency', $trip->currency),
-            'date' => $request->date,
-            'category' => $request->category,
-            'icon' => $request->icon,
-            'ai_suggested' => $request->boolean('aiSuggested'),
-            'is_private' => $request->boolean('isPrivate'),
-        ]);
+        DB::transaction(function () use ($request, $trip) {
+            $trip->expenses()->create([
+                'description' => $request->description,
+                'amount' => $request->amount,
+                'currency' => $request->input('currency', $trip->currency),
+                'date' => $request->date,
+                'category' => $request->category,
+                'icon' => $request->icon,
+                'ai_suggested' => $request->boolean('aiSuggested'),
+                'is_private' => $request->boolean('isPrivate'),
+            ]);
 
-        $trip->increment('spent', $request->amount);
+            $trip->increment('spent', $request->amount);
+        });
 
         return $this->freshTrip($trip);
     }
@@ -71,8 +74,10 @@ class ExpenseController extends Controller
         abort_unless($trip->user_id === $request->user()->id, 403);
         abort_unless($expense->trip_id === $trip->id, 404);
 
-        $trip->decrement('spent', $expense->amount);
-        $expense->delete();
+        DB::transaction(function () use ($trip, $expense) {
+            $trip->decrement('spent', $expense->amount);
+            $expense->delete();
+        });
 
         return $this->freshTrip($trip);
     }
