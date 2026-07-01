@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\TripResource;
 use App\Models\Trip;
-use Illuminate\Support\Facades\DB;
 
 class PublicController extends Controller
 {
@@ -24,6 +23,7 @@ class PublicController extends Controller
             ->with(['routeStops', 'expenses', 'photos', 'notes', 'user.profile'])
             ->withCount(['likes', 'comments'])
             ->orderByDesc('created_at')
+            ->limit(50)
             ->get()
             ->map(fn (Trip $trip) => $this->applyPrivacyFilter($trip));
 

@@ -15,11 +15,11 @@ class UserResource extends JsonResource
             'id' => (string) $this->id,
             'name' => $this->name,
             'email' => $this->email,
-            'avatar' => $profile->avatar ?? 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=200',
+            'avatar' => $profile?->avatar ?? 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=200',
             'memberSince' => $this->created_at->format('Y'),
-            'totalTrips' => $profile->total_trips ?? 0,
-            'countries' => $profile->countries ?? 0,
-            'kmTraveled' => (float) ($profile->km_traveled ?? 0),
+            'totalTrips' => $profile?->total_trips ?? 0,
+            'countries' => $profile?->countries ?? 0,
+            'kmTraveled' => (float) ($profile?->km_traveled ?? 0),
         ];
     }
 }

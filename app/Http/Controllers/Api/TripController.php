@@ -127,6 +127,12 @@ class TripController extends Controller
             'privacySettings.notes' => 'sometimes|boolean',
             'privacySettings.expenses' => 'sometimes|boolean',
             'preferences' => 'sometimes|array',
+            'route' => 'sometimes|array',
+            'route.*.label' => 'required_with:route|string',
+            'route.*.name' => 'required_with:route|string',
+            'route.*.lat' => 'required_with:route|numeric',
+            'route.*.lng' => 'required_with:route|numeric',
+            'route.*.color' => 'nullable|string',
         ]);
 
         if ($validator->fails()) {
@@ -164,7 +170,23 @@ class TripController extends Controller
             }
         }
 
-        $trip->update($updates);
+        DB::transaction(function () use ($request, $trip, $updates) {
+            $trip->update($updates);
+
+            if ($request->has('route')) {
+                $trip->routeStops()->delete();
+                foreach ($request->input('route', []) as $i => $stop) {
+                    $trip->routeStops()->create([
+                        'label' => $stop['label'],
+                        'name' => $stop['name'],
+                        'lat' => $stop['lat'],
+                        'lng' => $stop['lng'],
+                        'color' => $stop['color'] ?? null,
+                        'position' => $i,
+                    ]);
+                }
+            }
+        });
 
         return new TripResource($this->loadTrip($trip));
     }
