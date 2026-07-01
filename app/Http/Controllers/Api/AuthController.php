@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\UserResource;
 use App\Mail\OTPMail;
 use App\Models\User;
 use Carbon\Carbon;
@@ -56,6 +57,7 @@ class AuthController extends Controller
         $validator = Validator::make($request->all(), [
             'email' => 'required|email',
             'otp' => 'required|string|size:6',
+            'name' => 'nullable|string|max:255',
         ]);
 
         if ($validator->fails()) {
@@ -77,6 +79,7 @@ class AuthController extends Controller
             'otp' => null,
             'otp_expires_at' => null,
             'email_verified_at' => $user->email_verified_at ?? Carbon::now(),
+            'name' => $request->filled('name') ? $request->name : $user->name,
         ]);
 
         $token = $user->createToken('auth_token')->plainTextToken;
@@ -85,8 +88,18 @@ class AuthController extends Controller
             'message' => 'Login successful.',
             'access_token' => $token,
             'token_type' => 'Bearer',
-            'user' => $user,
+            'user' => new UserResource($user->load('profile')),
         ]);
+    }
+
+    /**
+     * Revoke the current access token.
+     */
+    public function logout(Request $request)
+    {
+        $request->user()->currentAccessToken()->delete();
+
+        return response()->json(['message' => 'Logged out.']);
     }
 
 }
