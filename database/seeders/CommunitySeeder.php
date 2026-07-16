@@ -18,6 +18,8 @@ class CommunitySeeder extends Seeder
                 'name' => 'Swasti Chapagain',
                 'email' => 'fb.royaladish@gmail.com',
                 'bio' => 'Exploring Nepal one trail at a time 🏔️',
+                'countries' => 2,
+                'km_traveled' => 1850,
                 'trips' => [
                     [
                         'name' => 'Weekend in Pokhara',
@@ -25,6 +27,8 @@ class CommunitySeeder extends Seeder
                         'photo' => 'photo-1544735716-392fe2489ffa',
                         'stops' => [['Lakeside', 28.2096, 83.9497], ['World Peace Pagoda', 28.2032, 83.9424]],
                         'note' => "Woke up early for the sunrise over the Annapurna range from the pagoda — worth every step.",
+                        'budget' => 18000,
+                        'spent' => 12400,
                     ],
                     [
                         'name' => 'Chitwan Jungle Escape',
@@ -32,6 +36,8 @@ class CommunitySeeder extends Seeder
                         'photo' => 'photo-1605649487212-47bdab064df7',
                         'stops' => [['Sauraha', 27.5769, 84.5061], ['Chitwan National Park', 27.5291, 84.3542]],
                         'note' => "Spotted a rhino on the jungle walk! Definitely doing the canoe ride again next time.",
+                        'budget' => 22000,
+                        'spent' => 19800,
                     ],
                 ],
             ],
@@ -39,6 +45,8 @@ class CommunitySeeder extends Seeder
                 'name' => 'Adish Dahal',
                 'email' => 'me.adishdahal@gmail.com',
                 'bio' => 'Builder of MyTrips. Traveler at heart.',
+                'countries' => 4,
+                'km_traveled' => 6200,
                 'trips' => [
                     [
                         'name' => 'Kathmandu Heritage Walk',
@@ -46,6 +54,8 @@ class CommunitySeeder extends Seeder
                         'photo' => 'photo-1605640840605-14ac1855827b',
                         'stops' => [['Durbar Square', 27.7040, 85.3070], ['Swayambhunath', 27.7149, 85.2903]],
                         'note' => "Spent the whole afternoon wandering Durbar Square — the woodwork on the temples is unreal.",
+                        'budget' => 12000,
+                        'spent' => 9100,
                     ],
                     [
                         'name' => 'Everest View Trek',
@@ -53,6 +63,8 @@ class CommunitySeeder extends Seeder
                         'photo' => 'photo-1526772662000-3f88f10405ff',
                         'stops' => [['Lukla', 27.6869, 86.7314], ['Namche Bazaar', 27.8069, 86.7140]],
                         'note' => "Namche at sunset with the first real view of Everest in the distance — still can't believe it.",
+                        'budget' => 45000,
+                        'spent' => 38700,
                     ],
                 ],
             ],
@@ -120,7 +132,7 @@ class CommunitySeeder extends Seeder
                 $user->update(['name' => $data['name']]);
             }
 
-            $setDistinctAvatar($user, $data['bio'], ['countries' => 3, 'km_traveled' => 4200]);
+            $setDistinctAvatar($user, $data['bio'], ['countries' => $data['countries'], 'km_traveled' => $data['km_traveled']]);
 
             return $user;
         });
@@ -200,7 +212,11 @@ class CommunitySeeder extends Seeder
             $trips = $namedUsers[$ai]['trips'];
 
             foreach ($trips as $ti => $data) {
-                if (Trip::where('user_id', $account->id)->where('name', $data['name'])->exists()) {
+                $existing = Trip::where('user_id', $account->id)->where('name', $data['name'])->first();
+
+                if ($existing) {
+                    $existing->update(['budget' => $data['budget'], 'spent' => $data['spent']]);
+
                     continue;
                 }
 
@@ -212,8 +228,8 @@ class CommunitySeeder extends Seeder
                     'status' => 'completed',
                     'start_date' => now()->subDays(20 + $ti * 5),
                     'end_date' => now()->subDays(18 + $ti * 5),
-                    'budget' => 25000,
-                    'spent' => 18500,
+                    'budget' => $data['budget'],
+                    'spent' => $data['spent'],
                     'currency' => 'NPR',
                     'cover_photo' => "https://images.unsplash.com/{$data['photo']}?w=800",
                     'description' => "A memorable trip to {$data['destination']}.",
@@ -257,7 +273,7 @@ class CommunitySeeder extends Seeder
 
                 $trip->expenses()->create([
                     'description' => 'Hotel stay',
-                    'amount' => 8000,
+                    'amount' => (int) round($data['spent'] * 0.4),
                     'currency' => 'NPR',
                     'date' => now()->subDays(19 + $ti * 5),
                     'category' => 'Accommodation',

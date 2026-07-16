@@ -18,7 +18,7 @@ class PublicUserResource extends JsonResource
             'avatar' => $profile?->avatar ?? UserProfile::DEFAULT_AVATAR,
             'bio' => $profile?->bio,
             'memberSince' => $this->created_at->format('Y'),
-            'totalTrips' => $profile?->total_trips ?? 0,
+            'totalTrips' => $this->trips_count ?? $this->trips()->where('visibility', 'public')->count(),
             'countries' => $profile?->countries ?? 0,
             'kmTraveled' => (float) ($profile?->km_traveled ?? 0),
             'followersCount' => (int) ($this->followers_count ?? $this->followers()->count()),
