@@ -87,6 +87,16 @@ class User extends Authenticatable
         return $this->hasOne(NotificationPreference::class);
     }
 
+    public function languageSuggestions(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(LanguageSuggestion::class);
+    }
+
+    public function bugReports(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(BugReport::class);
+    }
+
     public function allowsNotification(string $type): bool
     {
         $pref = $this->notificationPreference;

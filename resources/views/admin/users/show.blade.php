@@ -76,4 +76,45 @@
             </div>
         @endforelse
     </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-5 mt-8">
+        <div>
+            <h2 class="text-sm font-semibold text-muted-foreground uppercase tracking-wide mb-4">Bug Reports ({{ $bugReports->count() }})</h2>
+            <div class="space-y-3">
+                @forelse ($bugReports as $report)
+                    <div class="bg-card border border-border rounded-xl p-4">
+                        <div class="flex items-start justify-between gap-2 mb-1">
+                            <h3 class="text-sm font-semibold">{{ $report->title }}</h3>
+                            <span class="shrink-0 px-2 py-0.5 text-xs font-medium rounded-full
+                                {{ $report->status === 'open' ? 'bg-orange-50 dark:bg-orange-900/20 text-orange-700 dark:text-orange-400' : 'bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400' }}">
+                                {{ ucfirst($report->status) }}
+                            </span>
+                        </div>
+                        <p class="text-xs text-muted-foreground mb-2">{{ $report->description }}</p>
+                        <span class="text-xs text-muted-foreground/70">{{ $report->created_at->diffForHumans() }}</span>
+                    </div>
+                @empty
+                    <div class="bg-card border border-border rounded-xl p-8 text-center">
+                        <p class="text-sm text-muted-foreground">No bug reports.</p>
+                    </div>
+                @endforelse
+            </div>
+        </div>
+
+        <div>
+            <h2 class="text-sm font-semibold text-muted-foreground uppercase tracking-wide mb-4">Language Suggestions ({{ $languageSuggestions->count() }})</h2>
+            <div class="space-y-3">
+                @forelse ($languageSuggestions as $suggestion)
+                    <div class="bg-card border border-border rounded-xl p-4 flex items-center justify-between">
+                        <span class="text-sm font-medium">{{ $suggestion->language }}</span>
+                        <span class="text-xs text-muted-foreground/70">{{ $suggestion->created_at->diffForHumans() }}</span>
+                    </div>
+                @empty
+                    <div class="bg-card border border-border rounded-xl p-8 text-center">
+                        <p class="text-sm text-muted-foreground">No language suggestions.</p>
+                    </div>
+                @endforelse
+            </div>
+        </div>
+    </div>
 @endsection

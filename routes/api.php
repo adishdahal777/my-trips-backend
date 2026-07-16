@@ -6,6 +6,8 @@ use App\Http\Controllers\Api\DestinationController;
 use App\Http\Controllers\Api\DeviceTokenController;
 use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\Api\NotificationSettingsController;
+use App\Http\Controllers\Api\LanguageSuggestionController;
+use App\Http\Controllers\Api\BugReportController;
 use App\Http\Controllers\Api\ExpenseController;
 use App\Http\Controllers\Api\FollowController;
 use App\Http\Controllers\Api\LandingController;
@@ -57,6 +59,9 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('/notification-settings', [NotificationSettingsController::class, 'show']);
     Route::put('/notification-settings', [NotificationSettingsController::class, 'update']);
+
+    Route::post('/language-suggestions', [LanguageSuggestionController::class, 'store']);
+    Route::post('/bug-reports', [BugReportController::class, 'store']);
 
     Route::get('/recommendations', [RecommendationController::class, 'index']);
 

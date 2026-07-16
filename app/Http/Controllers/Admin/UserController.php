@@ -40,6 +40,8 @@ class UserController extends Controller
         return view('admin.users.show', [
             'user' => $user->load('roles'),
             'publicTrips' => $publicTrips,
+            'languageSuggestions' => $user->languageSuggestions()->latest()->get(),
+            'bugReports' => $user->bugReports()->latest()->get(),
         ]);
     }
 
