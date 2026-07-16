@@ -1,6 +1,7 @@
 @php
     $navItems = [
         ['title' => 'Dashboard', 'icon' => 'lucide:layout-dashboard', 'route' => 'admin.dashboard'],
+        ['title' => 'Trips', 'icon' => 'lucide:map', 'route' => 'admin.trips.index'],
         ['title' => 'Users', 'icon' => 'lucide:users', 'route' => 'admin.users.index'],
     ];
 @endphp

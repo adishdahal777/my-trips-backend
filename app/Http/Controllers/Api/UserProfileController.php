@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\UserProfile;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -21,7 +22,7 @@ class UserProfileController extends Controller
             'gender' => null,
             'address' => null,
             'nationality' => null,
-            'avatar' => 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=200',
+            'avatar' => UserProfile::DEFAULT_AVATAR,
             'total_trips' => 0,
             'countries' => 0,
             'km_traveled' => 0,

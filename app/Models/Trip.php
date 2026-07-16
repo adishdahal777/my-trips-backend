@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 #[Fillable([
     'user_id', 'name', 'destination', 'flag', 'status', 'start_date', 'end_date',
     'budget', 'spent', 'currency', 'cover_photo', 'description', 'transport',
-    'visibility', 'privacy_photos', 'privacy_notes', 'privacy_expenses',
+    'visibility', 'is_featured', 'privacy_photos', 'privacy_notes', 'privacy_expenses',
     'pref_purpose', 'pref_accommodation', 'pref_pace', 'pref_food_priority',
 ])]
 class Trip extends Model
@@ -25,6 +25,7 @@ class Trip extends Model
             'end_date' => 'date',
             'budget' => 'decimal:2',
             'spent' => 'decimal:2',
+            'is_featured' => 'boolean',
             'privacy_photos' => 'boolean',
             'privacy_notes' => 'boolean',
             'privacy_expenses' => 'boolean',

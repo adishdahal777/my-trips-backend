@@ -62,6 +62,11 @@
                 </div>
 
                 <div class="border-t border-border px-5 py-3 flex items-center justify-between">
+                    <a href="{{ route('admin.users.show', $user) }}"
+                        class="inline-flex items-center gap-1 text-xs font-medium text-muted-foreground hover:text-primary transition-colors">
+                        <span class="iconify w-3.5 h-3.5" data-icon="lucide:eye"></span>
+                        View
+                    </a>
                     <a href="{{ route('admin.users.edit', $user) }}"
                         class="inline-flex items-center gap-1 text-xs font-medium text-muted-foreground hover:text-primary transition-colors">
                         <span class="iconify w-3.5 h-3.5" data-icon="lucide:pencil"></span>

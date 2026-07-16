@@ -32,6 +32,16 @@ class UserController extends Controller
         return view('admin.users.create', ['roles' => Role::all()]);
     }
 
+    public function show(User $user)
+    {
+        $publicTrips = $user->trips()->where('visibility', 'public')->latest()->get();
+
+        return view('admin.users.show', [
+            'user' => $user->load('roles'),
+            'publicTrips' => $publicTrips,
+        ]);
+    }
+
     public function store(Request $request)
     {
         $data = $request->validate([

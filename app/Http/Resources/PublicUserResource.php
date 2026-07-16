@@ -6,7 +6,7 @@ use App\Models\UserProfile;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class UserResource extends JsonResource
+class PublicUserResource extends JsonResource
 {
     public function toArray(Request $request): array
     {
@@ -15,12 +15,14 @@ class UserResource extends JsonResource
         return [
             'id' => (string) $this->id,
             'name' => $this->name,
-            'email' => $this->email,
             'avatar' => $profile?->avatar ?? UserProfile::DEFAULT_AVATAR,
+            'bio' => $profile?->bio,
             'memberSince' => $this->created_at->format('Y'),
             'totalTrips' => $profile?->total_trips ?? 0,
             'countries' => $profile?->countries ?? 0,
             'kmTraveled' => (float) ($profile?->km_traveled ?? 0),
+            'followersCount' => (int) ($this->followers_count ?? $this->followers()->count()),
+            'followingCount' => (int) ($this->following_count ?? $this->following()->count()),
         ];
     }
 }

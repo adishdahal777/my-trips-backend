@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Models\UserProfile;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -42,7 +43,7 @@ class TripResource extends JsonResource
             'user' => $this->whenLoaded('user', fn () => [
                 'id' => (string) $this->user->id,
                 'name' => $this->user->name,
-                'avatar' => $this->user->profile?->avatar ?? 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=200',
+                'avatar' => $this->user->profile?->avatar ?? UserProfile::DEFAULT_AVATAR,
             ]),
             'likes' => (int) ($this->likes_count ?? $this->likes()->count()),
             'comments' => (int) ($this->comments_count ?? $this->comments()->count()),

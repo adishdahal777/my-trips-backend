@@ -61,4 +61,14 @@ class User extends Authenticatable
     {
         return $this->hasMany(TripView::class);
     }
+
+    public function following(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Follow::class, 'follower_id');
+    }
+
+    public function followers(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Follow::class, 'followee_id');
+    }
 }

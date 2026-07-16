@@ -19,9 +19,10 @@ class PublicController extends Controller
         return $trip;
     }
 
-    public function index()
+    public function index(Request $request)
     {
         $trips = Trip::where('visibility', 'public')
+            ->when($request->user, fn ($q, $userId) => $q->where('user_id', $userId))
             ->with(['routeStops', 'expenses', 'photos', 'notes', 'user.profile'])
             ->withCount(['likes', 'comments'])
             ->orderByDesc('created_at')

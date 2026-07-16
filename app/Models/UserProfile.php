@@ -12,6 +12,8 @@ class UserProfile extends Model
 {
     use HasFactory;
 
+    public const DEFAULT_AVATAR = 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=200';
+
     /**
      * Get the user that owns the profile.
      */

@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CommentController;
 use App\Http\Controllers\Api\ExpenseController;
+use App\Http\Controllers\Api\FollowController;
 use App\Http\Controllers\Api\LikeController;
 use App\Http\Controllers\Api\NoteController;
 use App\Http\Controllers\Api\PhotoController;
@@ -56,5 +57,11 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/trips/{trip}/notes/{note}', [NoteController::class, 'destroy']);
 
     Route::post('/trips/{trip}/like', [LikeController::class, 'toggle']);
+    Route::get('/trips/{trip}/comments', [CommentController::class, 'index']);
     Route::post('/trips/{trip}/comments', [CommentController::class, 'store']);
+
+    Route::post('/users/{user}/follow', [FollowController::class, 'toggle']);
+    Route::get('/users/{user}/followers', [FollowController::class, 'followers']);
+    Route::get('/users/{user}/following', [FollowController::class, 'following']);
+    Route::get('/users/{user}', [FollowController::class, 'show']);
 });
