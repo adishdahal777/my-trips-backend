@@ -2,12 +2,14 @@
 
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CommentController;
+use App\Http\Controllers\Api\DestinationController;
 use App\Http\Controllers\Api\ExpenseController;
 use App\Http\Controllers\Api\FollowController;
 use App\Http\Controllers\Api\LikeController;
 use App\Http\Controllers\Api\NoteController;
 use App\Http\Controllers\Api\PhotoController;
 use App\Http\Controllers\Api\PublicController;
+use App\Http\Controllers\Api\RatingController;
 use App\Http\Controllers\Api\RecommendationController;
 use App\Http\Controllers\Api\TripController;
 use App\Http\Controllers\Api\UploadController;
@@ -25,6 +27,7 @@ Route::prefix('auth')->group(function () {
 // Public routes
 Route::get('/feed', [PublicController::class, 'index']);
 Route::get('/public-trips/{trip}', [PublicController::class, 'show']);
+Route::get('/destinations', [DestinationController::class, 'index']);
 
 // Protected Routes
 Route::middleware('auth:sanctum')->group(function () {
@@ -64,4 +67,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/users/{user}/followers', [FollowController::class, 'followers']);
     Route::get('/users/{user}/following', [FollowController::class, 'following']);
     Route::get('/users/{user}', [FollowController::class, 'show']);
+
+    Route::post('/destinations', [DestinationController::class, 'store']);
+
+    Route::get('/ratings/mine', [RatingController::class, 'mine']);
+    Route::post('/ratings', [RatingController::class, 'store']);
 });

@@ -24,5 +24,6 @@ class DatabaseSeeder extends Seeder
 
         $this->call(PublicTripsSeeder::class);
         $this->call(SuperAdminSeeder::class);
+        $this->call(LandingContentSeeder::class);
     }
 }

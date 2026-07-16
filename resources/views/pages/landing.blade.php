@@ -120,50 +120,39 @@
     {{-- ═══════════════════════════════════════════════════
          FEATURES
     ═══════════════════════════════════════════════════ --}}
+    @php
+        $colorVars = [
+            'brand' => ['bg' => 'var(--brand-soft)', 'fg' => 'var(--brand)'],
+            'coral' => ['bg' => 'var(--coral-soft)', 'fg' => 'var(--coral)'],
+            'teal' => ['bg' => 'var(--teal-soft)', 'fg' => 'var(--teal)'],
+            'purple' => ['bg' => 'rgba(124,58,237,0.08)', 'fg' => '#7C3AED'],
+        ];
+    @endphp
     <section class="ft-features tight" id="features">
         <div class="wrap">
             <div class="sec-head" style="justify-content:center;text-align:center;flex-direction:column;align-items:center;">
-                <span class="badge">Features</span>
-                <div class="sec-title" style="margin-top:12px;">Everything you need to<br>remember every journey</div>
-                <div class="sec-sub" style="text-align:center;">From route mapping to expense tracking, MyTrips gives you the tools to document and share your adventures beautifully.</div>
+                <span class="badge">{{ $sections['features']->badge ?? 'Features' }}</span>
+                <div class="sec-title" style="margin-top:12px;">{!! $sections['features']->title ?? '' !!}</div>
+                <div class="sec-sub" style="text-align:center;">{{ $sections['features']->subtitle ?? '' }}</div>
             </div>
 
             <div class="ft-features-grid">
-                <div class="ft-feature-card reveal">
-                    <div class="ft-fc-icon" style="background:var(--brand-soft);color:var(--brand);">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                @foreach ($featureCards as $index => $card)
+                    <div class="ft-feature-card reveal @if($index > 0) reveal-delay-{{ min($index, 3) }} @endif">
+                        <div class="ft-fc-icon" style="background:{{ $colorVars[$card->color_key]['bg'] ?? $colorVars['brand']['bg'] }};color:{{ $colorVars[$card->color_key]['fg'] ?? $colorVars['brand']['fg'] }};">
+                            <x-landing-icon :icon="$card->icon" />
+                        </div>
+                        <h3>{{ $card->title }}</h3>
+                        <p>{{ $card->description }}</p>
                     </div>
-                    <h3>Route Mapping</h3>
-                    <p>Plot every stop on your journey with interactive maps. See your path come alive with colored waypoints and distances.</p>
-                </div>
-                <div class="ft-feature-card reveal reveal-delay-1">
-                    <div class="ft-fc-icon" style="background:var(--coral-soft);color:var(--coral);">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>
-                    </div>
-                    <h3>Expense Tracking</h3>
-                    <p>Log every rupee, dollar, or euro spent. Categorize expenses and watch your budget with smart AI-powered insights.</p>
-                </div>
-                <div class="ft-feature-card reveal reveal-delay-2">
-                    <div class="ft-fc-icon" style="background:var(--teal-soft);color:var(--teal);">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
-                    </div>
-                    <h3>Photo Journal</h3>
-                    <p>Capture geotagged photos at every destination. Build a visual story of your trip that lasts forever.</p>
-                </div>
-                <div class="ft-feature-card reveal reveal-delay-3">
-                    <div class="ft-fc-icon" style="background:rgba(124,58,237,0.08);color:#7C3AED;">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
-                    </div>
-                    <h3>Trip Notes</h3>
-                    <p>Write journal entries with mood tracking and color coding. Capture how you felt at every moment of your journey.</p>
-                </div>
+                @endforeach
             </div>
 
             <div class="ft-features-showcase reveal-scale">
                 <div class="ft-fs-content">
-                    <span class="ft-fs-label">And there's more</span>
-                    <h2>Social sharing<br>built right in.</h2>
-                    <p>Publish your trips publicly and let others explore your adventures. Get likes, comments, and inspire fellow travelers from around the globe.</p>
+                    <span class="ft-fs-label">{{ $sections['social_showcase']->badge ?? "And there's more" }}</span>
+                    <h2>{!! $sections['social_showcase']->title ?? '' !!}</h2>
+                    <p>{{ $sections['social_showcase']->subtitle ?? '' }}</p>
                     <div class="ft-fs-stats">
                         <div class="ft-fs-stat">
                             <strong>Public Feed</strong>
@@ -182,21 +171,8 @@
                 <div class="ft-fs-visual">
                     <div class="ft-phone-mockup">
                         <div class="ft-phone-notch"></div>
-                        <div class="ft-phone-screen">
-                            <div class="ft-phone-header">
-                                <div class="ft-phone-avatar">A</div>
-                                <div>
-                                    <strong>Aarav Sharma</strong>
-                                    <span>Kathmandu → Pokhara</span>
-                                </div>
-                            </div>
-                            <img src="https://images.unsplash.com/photo-1544735716-392fe2489ffa?w=400&q=80" alt="" class="ft-phone-img" />
-                            <div class="ft-phone-actions">
-                                <span>❤️ 124</span>
-                                <span>💬 18</span>
-                                <span>📤 Share</span>
-                            </div>
-                            <div class="ft-phone-text">The sunrise at Sarangkot was absolutely breathtaking. 5 days into our Nepal trek and every step has been worth it.</div>
+                        <div class="ft-phone-screen" style="padding:0;">
+                            <img src="{{ asset('images/app-screenshot.png') }}" alt="MyTrips app" style="width:100%;height:100%;object-fit:cover;object-position:top;" />
                         </div>
                     </div>
                 </div>
@@ -210,41 +186,26 @@
     <section class="ft-how tight" id="how-it-works">
         <div class="wrap">
             <div class="sec-head" style="justify-content:center;text-align:center;flex-direction:column;align-items:center;">
-                <span class="badge" style="background:var(--coral-soft);color:var(--coral);">Simple process</span>
-                <div class="sec-title" style="margin-top:12px;">Three steps to your<br>first trip story</div>
+                <span class="badge" style="background:var(--coral-soft);color:var(--coral);">{{ $sections['how_it_works']->badge ?? 'Simple process' }}</span>
+                <div class="sec-title" style="margin-top:12px;">{!! $sections['how_it_works']->title ?? '' !!}</div>
             </div>
 
             <div class="ft-steps">
-                <div class="ft-step reveal">
-                    <div class="ft-step-num">01</div>
-                    <div class="ft-step-visual">
-                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--brand)" stroke-width="1.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                @foreach ($processSteps as $index => $step)
+                    <div class="ft-step reveal @if($index > 0) reveal-delay-{{ min($index, 3) }} @endif">
+                        <div class="ft-step-num">{{ str_pad($index + 1, 2, '0', STR_PAD_LEFT) }}</div>
+                        <div class="ft-step-visual" style="color:{{ $colorVars[$step->color_key]['fg'] ?? $colorVars['brand']['fg'] }};">
+                            <x-landing-icon :icon="$step->icon" :size="48" />
+                        </div>
+                        <h3>{{ $step->title }}</h3>
+                        <p>{{ $step->description }}</p>
                     </div>
-                    <h3>Create your trip</h3>
-                    <p>Set your destination, dates, and budget. Add route stops to map out your journey from start to finish.</p>
-                </div>
-                <div class="ft-step-connector reveal reveal-delay-1">
-                    <svg width="40" height="2" viewBox="0 0 40 2"><line x1="0" y1="1" x2="40" y2="1" stroke="var(--border)" stroke-width="2" stroke-dasharray="4 4"/></svg>
-                </div>
-                <div class="ft-step reveal reveal-delay-1">
-                    <div class="ft-step-num">02</div>
-                    <div class="ft-step-visual">
-                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--coral)" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
-                    </div>
-                    <h3>Capture moments</h3>
-                    <p>Log expenses, snap photos, and write journal notes as you travel. Everything stays organized by date and location.</p>
-                </div>
-                <div class="ft-step-connector reveal reveal-delay-2">
-                    <svg width="40" height="2" viewBox="0 0 40 2"><line x1="0" y1="1" x2="40" y2="1" stroke="var(--border)" stroke-width="2" stroke-dasharray="4 4"/></svg>
-                </div>
-                <div class="ft-step reveal reveal-delay-2">
-                    <div class="ft-step-num">03</div>
-                    <div class="ft-step-visual">
-                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--teal)" stroke-width="1.5"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
-                    </div>
-                    <h3>Share your story</h3>
-                    <p>Publish your trip to the public feed or keep it private. Let the world see your adventure — or just your future self.</p>
-                </div>
+                    @if (!$loop->last)
+                        <div class="ft-step-connector reveal reveal-delay-{{ min($index + 1, 3) }}">
+                            <svg width="40" height="2" viewBox="0 0 40 2"><line x1="0" y1="1" x2="40" y2="1" stroke="var(--border)" stroke-width="2" stroke-dasharray="4 4"/></svg>
+                        </div>
+                    @endif
+                @endforeach
             </div>
         </div>
     </section>
@@ -319,60 +280,21 @@
             </div>
 
             <div class="ft-dest-grid">
-                <a href="#" class="ft-dest-card ft-dest-lg reveal">
-                    <img src="https://images.unsplash.com/photo-1544735716-392fe2489ffa?w=800&q=80" alt="" />
-                    <div class="ft-dest-overlay"></div>
-                    <div class="ft-dest-body">
-                        <span class="ft-dest-flag">🇳🇵</span>
-                        <h3>Nepal</h3>
-                        <span>342 trips</span>
+                @forelse ($destinations as $index => $dest)
+                    <a href="#" class="ft-dest-card @if($index === 0) ft-dest-lg @endif reveal @if($index > 0) reveal-delay-{{ min($index, 3) }} @endif">
+                        <img src="{{ $dest->cover_image ?? 'https://images.unsplash.com/photo-1506929562872-bb421503ef21?w=600&q=80' }}" alt="{{ $dest->name }}" />
+                        <div class="ft-dest-overlay"></div>
+                        <div class="ft-dest-body">
+                            <span class="ft-dest-flag">{{ $dest->flag }}</span>
+                            <h3>{{ $dest->name }}</h3>
+                            <span>{{ number_format($dest->trip_count) }} trips</span>
+                        </div>
+                    </a>
+                @empty
+                    <div class="col-span-full text-center py-12">
+                        <p class="text-muted-foreground">No destinations yet.</p>
                     </div>
-                </a>
-                <a href="#" class="ft-dest-card reveal reveal-delay-1">
-                    <img src="https://images.unsplash.com/photo-1506929562872-bb421503ef21?w=600&q=80" alt="" />
-                    <div class="ft-dest-overlay"></div>
-                    <div class="ft-dest-body">
-                        <span class="ft-dest-flag">🇮🇩</span>
-                        <h3>Bali</h3>
-                        <span>218 trips</span>
-                    </div>
-                </a>
-                <a href="#" class="ft-dest-card reveal reveal-delay-2">
-                    <img src="https://images.unsplash.com/photo-1528164344705-47542687000d?w=600&q=80" alt="" />
-                    <div class="ft-dest-overlay"></div>
-                    <div class="ft-dest-body">
-                        <span class="ft-dest-flag">🇯🇵</span>
-                        <h3>Japan</h3>
-                        <span>189 trips</span>
-                    </div>
-                </a>
-                <a href="#" class="ft-dest-card reveal reveal-delay-1">
-                    <img src="https://images.unsplash.com/photo-1518684079-3c830dcef090?w=600&q=80" alt="" />
-                    <div class="ft-dest-overlay"></div>
-                    <div class="ft-dest-body">
-                        <span class="ft-dest-flag">🇦🇪</span>
-                        <h3>Dubai</h3>
-                        <span>156 trips</span>
-                    </div>
-                </a>
-                <a href="#" class="ft-dest-card reveal reveal-delay-2">
-                    <img src="https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=600&q=80" alt="" />
-                    <div class="ft-dest-overlay"></div>
-                    <div class="ft-dest-body">
-                        <span class="ft-dest-flag">🇨🇭</span>
-                        <h3>Switzerland</h3>
-                        <span>134 trips</span>
-                    </div>
-                </a>
-                <a href="#" class="ft-dest-card reveal reveal-delay-3">
-                    <img src="https://images.unsplash.com/photo-1516483638261-f4dbaf036963?w=600&q=80" alt="" />
-                    <div class="ft-dest-overlay"></div>
-                    <div class="ft-dest-body">
-                        <span class="ft-dest-flag">🇮🇹</span>
-                        <h3>Italy</h3>
-                        <span>128 trips</span>
-                    </div>
-                </a>
+                @endforelse
             </div>
         </div>
     </section>
@@ -383,44 +305,29 @@
     <section class="ft-testimonials tight">
         <div class="wrap">
             <div class="sec-head" style="justify-content:center;text-align:center;flex-direction:column;align-items:center;">
-                <span class="badge" style="background:var(--teal-soft);color:var(--teal);">Loved by travelers</span>
-                <div class="sec-title" style="margin-top:12px;">What explorers say</div>
+                <span class="badge" style="background:var(--teal-soft);color:var(--teal);">{{ $sections['testimonials']->badge ?? 'Loved by travelers' }}</span>
+                <div class="sec-title" style="margin-top:12px;">{{ $sections['testimonials']->title ?? 'What explorers say' }}</div>
             </div>
 
+            @php $avatarColors = ['brand', 'coral', 'teal']; @endphp
             <div class="ft-test-grid">
-                <div class="ft-test-card reveal">
-                    <div class="ft-test-stars">★★★★★</div>
-                    <p>"MyTrips completely changed how I document my travels. The route mapping feature is incredible — I can see every stop I've ever made on a single map."</p>
-                    <div class="ft-test-user">
-                        <div class="ft-test-avatar" style="background:var(--brand-soft);color:var(--brand);">A</div>
-                        <div>
-                            <strong>Aarav Sharma</strong>
-                            <span>Traveled to 12 countries</span>
+                @forelse ($ratings as $index => $rating)
+                    @php $c = $colorVars[$avatarColors[$index % 3]]; @endphp
+                    <div class="ft-test-card reveal @if($index > 0) reveal-delay-{{ min($index, 3) }} @endif">
+                        <div class="ft-test-stars">{{ str_repeat('★', $rating->stars) }}{{ str_repeat('☆', 5 - $rating->stars) }}</div>
+                        <p>"{{ $rating->comment }}"</p>
+                        <div class="ft-test-user">
+                            <div class="ft-test-avatar" style="background:{{ $c['bg'] }};color:{{ $c['fg'] }};">{{ strtoupper(substr($rating->user->name ?? 'U', 0, 1)) }}</div>
+                            <div>
+                                <strong>{{ $rating->user->name ?? 'Traveler' }}</strong>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="ft-test-card reveal reveal-delay-1">
-                    <div class="ft-test-stars">★★★★★</div>
-                    <p>"The expense tracker saved me so much hassle. I used to lose receipts and forget what I spent. Now everything is categorized automatically."</p>
-                    <div class="ft-test-user">
-                        <div class="ft-test-avatar" style="background:var(--coral-soft);color:var(--coral);">P</div>
-                        <div>
-                            <strong>Priya Gurung</strong>
-                            <span>Budget traveler</span>
-                        </div>
+                @empty
+                    <div class="col-span-full text-center py-12">
+                        <p class="text-muted-foreground">No reviews yet — be the first to rate MyTrips!</p>
                     </div>
-                </div>
-                <div class="ft-test-card reveal reveal-delay-2">
-                    <div class="ft-test-stars">★★★★★</div>
-                    <p>"I love the journal feature. Writing notes with moods and colors makes looking back at trips so much more emotional and meaningful."</p>
-                    <div class="ft-test-user">
-                        <div class="ft-test-avatar" style="background:var(--teal-soft);color:var(--teal);">S</div>
-                        <div>
-                            <strong>Sita Magar</strong>
-                            <span>Digital nomad</span>
-                        </div>
-                    </div>
-                </div>
+                @endforelse
             </div>
         </div>
     </section>

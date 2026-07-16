@@ -2,6 +2,10 @@
 
 @section('title', $trip->name . ' — MyTrips')
 
+@push('head-css')
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+@endpush
+
 @section('content')
 <main class="ft-home">
 
@@ -338,20 +342,7 @@
                 </div>
 
                 <div class="tp-map reveal-scale" style="margin-top:24px;">
-                    <div class="tp-map-inner">
-                        @foreach ($trip->routeStops as $i => $stop)
-                            @php
-                                $total = $trip->routeStops->count();
-                                $left = $total > 1 ? (10 + ($i / ($total - 1)) * 75) : 45;
-                                $top = 30 + sin($i * 0.8) * 25;
-                            @endphp
-                            <div class="tp-map-pin" style="left:{{ $left }}%;top:{{ $top }}%;--pin-color:{{ $stop->color ?: 'var(--brand)' }};"><span>{{ $stop->label }}</span></div>
-                        @endforeach
-                        <div class="tp-map-label">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                            {{ $trip->routeStops->count() }} stops
-                        </div>
-                    </div>
+                    <div id="tripLeafletMap" class="tp-map-inner" style="position:relative;"></div>
                 </div>
 
                 {{-- Route Stats --}}
@@ -757,71 +748,8 @@ document.querySelectorAll('.tp-nav-pill').forEach(tab => {
 .tp-map-inner {
     position: relative;
     height: 400px;
-    background:
-        radial-gradient(circle at 30% 60%, rgba(37,99,235,0.04) 0%, transparent 50%),
-        radial-gradient(circle at 70% 30%, rgba(13,148,136,0.04) 0%, transparent 50%),
-        linear-gradient(135deg, var(--surface-2) 0%, var(--surface) 100%);
+    background: var(--surface-2);
     overflow: hidden;
-}
-.tp-map-inner::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background-image: radial-gradient(var(--border) 1px, transparent 1px);
-    background-size: 24px 24px;
-    opacity: 0.5;
-}
-.tp-map-route {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-}
-.tp-map-pin {
-    position: absolute;
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    background: var(--pin-color);
-    color: #fff;
-    display: grid;
-    place-items: center;
-    font-size: 12px;
-    font-weight: 700;
-    transform: translate(-50%, -50%);
-    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-    z-index: 2;
-    transition: transform 0.2s;
-    cursor: pointer;
-}
-.tp-map-pin:hover { transform: translate(-50%, -50%) scale(1.2); }
-.tp-map-pin::after {
-    content: '';
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-    background: var(--pin-color);
-    animation: ping 2s cubic-bezier(0, 0, 0.2, 1) infinite;
-    opacity: 0.3;
-}
-@keyframes ping {
-    75%, 100% { transform: scale(2); opacity: 0; }
-}
-.tp-map-label {
-    position: absolute;
-    bottom: 16px;
-    left: 16px;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 12px;
-    color: var(--text-muted);
-    background: var(--surface);
-    padding: 8px 14px;
-    border-radius: var(--r-pill);
-    border: 1px solid var(--border);
-    z-index: 3;
 }
 
 /* ══════════════════════════════════════════════════════════════
@@ -840,5 +768,67 @@ document.querySelectorAll('.tp-nav-pill').forEach(tab => {
     .tp-nav-pill svg { display: none; }
 }
 </style>
+
+@php
+    $stopsForMap = $trip->routeStops->sortBy('position')->values()->map(function ($s) {
+        return [
+            'lat' => (float) $s->lat,
+            'lng' => (float) $s->lng,
+            'label' => $s->label,
+            'name' => $s->name,
+            'color' => $s->color ?: '#2563EB',
+        ];
+    });
+@endphp
+@push('scripts')
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+    (function () {
+        const el = document.getElementById('tripLeafletMap');
+        if (!el || typeof L === 'undefined') return;
+
+        const stops = @json($stopsForMap);
+
+        if (stops.length === 0) {
+            el.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100%;color:var(--text-muted);font-size:14px;">No route stops yet</div>';
+            return;
+        }
+
+        const map = L.map(el, { scrollWheelZoom: false });
+        L.tileLayer('https://basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}@2x.png', { maxZoom: 19 }).addTo(map);
+
+        const points = stops.map(s => [s.lat, s.lng]);
+        stops.forEach(s => {
+            const icon = L.divIcon({
+                className: '',
+                html: '<div style="width:28px;height:28px;border-radius:14px;border:2.5px solid #fff;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:11px;background:' + s.color + ';box-shadow:0 2px 4px rgba(0,0,0,0.3);">' + s.label + '</div>',
+                iconSize: [28, 28],
+                iconAnchor: [14, 14],
+            });
+            L.marker([s.lat, s.lng], { icon }).bindPopup('<strong>' + s.name + '</strong>').addTo(map);
+        });
+
+        if (points.length > 1) {
+            const straightLine = L.polyline(points, { color: '#2563EB', weight: 3, opacity: 0.6, dashArray: '2,8' }).addTo(map);
+            map.fitBounds(points, { padding: [30, 30] });
+
+            const coordsStr = points.map(p => p[1] + ',' + p[0]).join(';');
+            fetch('https://router.project-osrm.org/route/v1/driving/' + coordsStr + '?overview=full&geometries=geojson')
+                .then(r => r.json())
+                .then(data => {
+                    const route = data.routes && data.routes[0];
+                    if (!route) return;
+                    const routeCoords = route.geometry.coordinates.map(c => [c[1], c[0]]);
+                    map.removeLayer(straightLine);
+                    L.polyline(routeCoords, { color: '#2563EB', weight: 4 }).addTo(map);
+                    map.fitBounds(routeCoords, { padding: [30, 30] });
+                })
+                .catch(() => {});
+        } else {
+            map.setView(points[0], 13);
+        }
+    })();
+</script>
+@endpush
 
 @endsection

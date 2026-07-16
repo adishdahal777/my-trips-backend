@@ -3,6 +3,9 @@
         ['title' => 'Dashboard', 'icon' => 'lucide:layout-dashboard', 'route' => 'admin.dashboard'],
         ['title' => 'Trips', 'icon' => 'lucide:map', 'route' => 'admin.trips.index'],
         ['title' => 'Users', 'icon' => 'lucide:users', 'route' => 'admin.users.index'],
+        ['title' => 'Destinations', 'icon' => 'lucide:globe', 'route' => 'admin.destinations.index'],
+        ['title' => 'Ratings', 'icon' => 'lucide:star', 'route' => 'admin.ratings.index'],
+        ['title' => 'Landing Page', 'icon' => 'lucide:layout', 'route' => 'admin.landing.index'],
     ];
 @endphp
 
