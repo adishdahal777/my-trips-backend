@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
 class UploadController extends Controller
@@ -18,8 +19,8 @@ class UploadController extends Controller
             return response()->json(['error' => $validator->errors()], 422);
         }
 
-        $path = $request->file('image')->store('uploads', 'public');
+        $path = $request->file('image')->store('uploads', 's3');
 
-        return response()->json(['url' => asset('storage/' . $path)]);
+        return response()->json(['url' => Storage::disk('s3')->url($path)]);
     }
 }

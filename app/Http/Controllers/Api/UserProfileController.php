@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\UserProfile;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
 class UserProfileController extends Controller
@@ -94,8 +95,8 @@ class UserProfileController extends Controller
 
         if ($request->hasFile('avatar')) {
             $user = $request->user();
-            $path = $request->file('avatar')->store('avatars', 'public');
-            $url = asset('storage/' . $path);
+            $path = $request->file('avatar')->store('avatars', 's3');
+            $url = Storage::disk('s3')->url($path);
 
             $user->profile()->updateOrCreate(
                 ['user_id' => $user->id],
