@@ -11,57 +11,65 @@ class PublicTripsSeeder extends Seeder
     public function run(): void
     {
         $travelers = collect([
-            'Alex Rivera', 'Maya Chen', 'Sam Okafor', 'Priya Nair', 'Liam Park',
-            'Sofia Petrov', 'James Whitfield', 'Elena Romero', 'Noah Kim', 'Aisha Bello',
+            'Aarav Sharma', 'Priya Gurung', 'Sita Magar', 'Bibek Shrestha', 'Anjali Thapa',
+            'Rajesh Tamang', 'Kritika Rai', 'Sagar Adhikari', 'Nisha Karki', 'Sunil Gharti',
         ])->map(fn ($name) => User::firstOrCreate(
             ['email' => strtolower(str_replace(' ', '.', $name)) . '@mytrips.demo'],
             ['name' => $name]
         ));
 
         $expensePool = [
-            ['category' => 'Food', 'icon' => '🍜', 'items' => ['Street food tour', 'Local market breakfast', 'Rooftop dinner', 'Coffee & pastries', 'Night market snacks']],
-            ['category' => 'Transport', 'icon' => '🚗', 'items' => ['Airport taxi', 'Car rental', 'Train tickets', 'Local bus pass', 'Scooter rental']],
-            ['category' => 'Accommodation', 'icon' => '🏨', 'items' => ['Boutique hotel', 'Beachfront villa', 'Hostel dorm bed', 'Guesthouse stay', 'Mountain lodge']],
-            ['category' => 'Activities', 'icon' => '🎭', 'items' => ['Guided city tour', 'Museum entry', 'Snorkeling trip', 'Sunset cruise', 'Hiking permit']],
-            ['category' => 'Shopping', 'icon' => '🛍️', 'items' => ['Local souvenirs', 'Handmade textiles', 'Spice market haul', 'Postcards & prints']],
+            ['category' => 'Food', 'icon' => '🍜', 'items' => ['Dal bhat set', 'Momo tasting', 'Tea house breakfast', 'Sel roti & tea', 'Yak cheese platter']],
+            ['category' => 'Transport', 'icon' => '🚌', 'items' => ['Local bus fare', 'Jeep hire', 'Domestic flight', 'Porter fee', 'Taxi to airport']],
+            ['category' => 'Accommodation', 'icon' => '🏨', 'items' => ['Tea house lodge', 'Lakeside guesthouse', 'Homestay night', 'Hotel in Thamel', 'Jungle resort']],
+            ['category' => 'Activities', 'icon' => '🎭', 'items' => ['Trekking permit (TIMS)', 'ACAP entry fee', 'Jungle safari', 'Paragliding flight', 'Monastery visit']],
+            ['category' => 'Shopping', 'icon' => '🛍️', 'items' => ['Pashmina shawl', 'Singing bowl', 'Khukuri souvenir', 'Handwoven scarf']],
         ];
 
         $noteBank = [
-            ['title' => 'Best local eats', 'body' => "Found a tiny family-run spot near the old town — ask for the daily special, it's never on the menu.", 'mood' => '😍', 'color' => '#FFF3E0'],
-            ['title' => 'Getting around', 'body' => 'Public transport passes pay for themselves after day two. Download the offline map before you land.', 'mood' => '😊', 'color' => '#E8F5E9'],
-            ['title' => 'Hidden viewpoint', 'body' => 'Climbed up before sunrise — completely empty and the light was unreal. Worth the early alarm.', 'mood' => '🤩', 'color' => '#E3F2FD'],
-            ['title' => 'Packing note', 'body' => 'Weather flips fast here. Layers, a rain shell, and good shoes saved the whole trip.', 'mood' => '🧳', 'color' => '#F3E5F5'],
-            ['title' => 'Slow day', 'body' => "Didn't plan anything today and it was the best decision. Wandered, napped, ate well.", 'mood' => '🥰', 'color' => '#FCE4EC'],
+            ['title' => 'Best dal bhat yet', 'body' => "Found a tiny tea house past the ridge that refills your plate as many times as you want — exactly what we needed after that climb.", 'mood' => '😍', 'color' => '#FFF3E0'],
+            ['title' => 'Getting around', 'body' => "Local buses are packed but cheap and honestly part of the experience. Jeep share is worth it once the road gets rough.", 'mood' => '😊', 'color' => '#E8F5E9'],
+            ['title' => 'Hidden viewpoint', 'body' => 'Woke up at 4am to catch the sunrise over the peaks — completely empty and the light on the snow was unreal.', 'mood' => '🤩', 'color' => '#E3F2FD'],
+            ['title' => 'Packing note', 'body' => 'Weather flips fast up here. Down jacket, good boots, and a headlamp saved the whole trek.', 'mood' => '🧳', 'color' => '#F3E5F5'],
+            ['title' => 'Slow day in the village', 'body' => "Didn't plan anything today — just sat with tea and watched the prayer flags move. Best decision of the trip.", 'mood' => '🥰', 'color' => '#FCE4EC'],
         ];
 
-        $photoCaptions = ['Golden hour', 'Local market', 'Old town streets', 'View from the top', 'Coastline drive', 'Street food stall', 'Sunset over the water', 'Morning fog'];
+        $photoCaptions = ['Golden hour over the peaks', 'Local market', 'Prayer flags on the ridge', 'View from the pass', 'Terraced fields', 'Tea house lunch', 'Sunset over the valley', 'Morning fog on the lake'];
 
         $commentBank = [
             'Looks amazing! Adding this to my list.',
-            'The photos are incredible, how long were you there?',
-            "I've been wanting to visit — any tips on when to go?",
+            'The photos are incredible, how long did the trek take?',
+            "I've been wanting to do this route — any tips on the best season?",
             'This just made it to the top of my travel wishlist.',
             'Following your route for our trip next month!',
-            'That view in photo two is unbelievable.',
+            'That view from the pass is unbelievable.',
         ];
 
-        // Curated, verified-live Unsplash photo IDs per destination (images.unsplash.com/{id}).
+        // Verified-live Unsplash photo IDs, checked for real Nepal/Himalaya subject matter.
+        $nepalPhotos = [
+            'photo-1544735716-392fe2489ffa', // Everest region with stupa
+            'photo-1526772662000-3f88f10405ff', // trekker overlooking the Himalaya
+            'photo-1605640840605-14ac1855827b', // Boudhanath Stupa, Kathmandu
+            'photo-1605649487212-47bdab064df7', // snowy Himalayan range
+            'photo-1544620347-c4fd4a3d5957', // bus at a mountain pass
+        ];
+
         $trips = [
-            ['name' => 'Summer in Bali', 'destination' => 'Bali, Indonesia', 'flag' => '🇮🇩', 'status' => 'completed', 'transport' => 'flight', 'currency' => 'USD', 'photos' => ['photo-1537996194471-e657df975ab4', 'photo-1552733407-5d5c46c3bb3b', 'photo-1518548419970-58e3b4079ab2'], 'stops' => [['Denpasar', -8.6705, 115.2126], ['Ubud', -8.5069, 115.2625], ['Uluwatu', -8.8291, 115.0849]]],
-            ['name' => 'Tokyo Neon Nights', 'destination' => 'Tokyo, Japan', 'flag' => '🇯🇵', 'status' => 'ongoing', 'transport' => 'flight', 'currency' => 'USD', 'photos' => ['photo-1540959733332-eab4deabeeaf', 'photo-1513407030348-c983a97b98d8', 'photo-1503899036084-c55cdd92da26'], 'stops' => [['Narita', 35.7720, 140.3929], ['Shibuya', 35.6598, 139.7004], ['Shinjuku', 35.6938, 139.7036]]],
-            ['name' => 'Road Trip Iceland', 'destination' => 'Reykjavik, Iceland', 'flag' => '🇮🇸', 'status' => 'completed', 'transport' => 'car', 'currency' => 'USD', 'photos' => ['photo-1490682143684-14369e18dce8', 'photo-1587595431973-160d0d94add1', 'photo-1580619305218-8423a7ef79b4'], 'stops' => [['Reykjavik', 64.1466, -21.9426], ['Vik', 63.4194, -19.0060], ['Jokulsarlon', 64.0784, -16.2306]]],
-            ['name' => 'Backpacking Peru', 'destination' => 'Cusco, Peru', 'flag' => '🇵🇪', 'status' => 'ongoing', 'transport' => 'bus', 'currency' => 'USD', 'photos' => ['photo-1526392060635-9d6019884377', 'photo-1499856871958-5b9627545d1a', 'photo-1522093007474-d86e9bf7ba6f'], 'stops' => [['Cusco', -13.5320, -71.9675], ['Ollantaytambo', -13.2583, -72.2636], ['Machu Picchu', -13.1631, -72.5450]]],
-            ['name' => 'Parisian Escape', 'destination' => 'Paris, France', 'flag' => '🇫🇷', 'status' => 'completed', 'transport' => 'train', 'currency' => 'EUR', 'photos' => ['photo-1502602898657-3e91760cbb34', 'photo-1550340499-a6c60fc8287c', 'photo-1529260830199-42c24126f198'], 'stops' => [['CDG Airport', 49.0097, 2.5479], ['Eiffel Tower', 48.8584, 2.2945], ['Montmartre', 48.8867, 2.3431]]],
-            ['name' => 'Roman Holiday', 'destination' => 'Rome, Italy', 'flag' => '🇮🇹', 'status' => 'completed', 'transport' => 'flight', 'currency' => 'EUR', 'photos' => ['photo-1552832230-c0197dd311b5', 'photo-1489493887464-892be6d1daae', 'photo-1552550049-db097c9480d1'], 'stops' => [['Fiumicino', 41.8003, 12.2389], ['Colosseum', 41.8902, 12.4922], ['Trastevere', 41.8896, 12.4695]]],
-            ['name' => 'NYC Long Weekend', 'destination' => 'New York, USA', 'flag' => '🇺🇸', 'status' => 'upcoming', 'transport' => 'flight', 'currency' => 'USD', 'photos' => ['photo-1496442226666-8d4d0e62e6e9', 'photo-1522083165195-3424ed129620', 'photo-1485871981521-5b1fd3805eee'], 'stops' => [['JFK Airport', 40.6413, -73.7781], ['Manhattan', 40.7831, -73.9712], ['Brooklyn', 40.6782, -73.9442]]],
-            ['name' => 'Sydney & the Coast', 'destination' => 'Sydney, Australia', 'flag' => '🇦🇺', 'status' => 'completed', 'transport' => 'flight', 'currency' => 'USD', 'photos' => ['photo-1506973035872-a4ec16b8e8d9', 'photo-1523059623039-a9ed027e7fad', 'photo-1524293581917-878a6d017c71'], 'stops' => [['Sydney Airport', -33.9399, 151.1753], ['Bondi Beach', -33.8908, 151.2743], ['Blue Mountains', -33.7128, 150.3119]]],
-            ['name' => 'Cape Town Adventure', 'destination' => 'Cape Town, South Africa', 'flag' => '🇿🇦', 'status' => 'completed', 'transport' => 'car', 'currency' => 'USD', 'photos' => ['photo-1571939228382-b2f2b585ce15', 'photo-1577948000111-9c970dfe3743', 'photo-1489749798305-4fea3ae63d43'], 'stops' => [['Cape Town Airport', -33.9715, 18.6021], ['Table Mountain', -33.9628, 18.4098], ['Cape Point', -34.3568, 18.4970]]],
-            ['name' => 'Northern Lights Chase', 'destination' => 'Tromsø, Norway', 'flag' => '🇳🇴', 'status' => 'completed', 'transport' => 'flight', 'currency' => 'USD', 'photos' => ['photo-1531366936337-7c912a4589a7', 'photo-1483347756197-71ef80e95f73', 'photo-1520769669658-f07657f5a307'], 'stops' => [['Oslo', 60.1975, 11.1004], ['Tromsø', 69.6496, 18.9560], ['Lofoten Islands', 68.2340, 14.5680]]],
-            ['name' => 'Thailand Island Hop', 'destination' => 'Phuket, Thailand', 'flag' => '🇹🇭', 'status' => 'ongoing', 'transport' => 'flight', 'currency' => 'USD', 'photos' => ['photo-1552465011-b4e21bf6e79a', 'photo-1573790387438-4da905039392', 'photo-1531572753322-ad063cecc140'], 'stops' => [['Phuket', 7.8804, 98.3923], ['Krabi', 8.0863, 98.9063], ['Koh Phi Phi', 7.7407, 98.7784]]],
-            ['name' => 'Marrakech & the Desert', 'destination' => 'Marrakech, Morocco', 'flag' => '🇲🇦', 'status' => 'completed', 'transport' => 'car', 'currency' => 'EUR', 'photos' => ['photo-1489493887464-892be6d1daae', 'photo-1489749798305-4fea3ae63d43', 'photo-1531572753322-ad063cecc140'], 'stops' => [['Marrakech', 31.6295, -7.9811], ['Ait Ben Haddou', 31.0470, -7.1315], ['Merzouga Dunes', 31.0801, -4.0133]]],
-            ['name' => 'Backpacking Vietnam', 'destination' => 'Hanoi, Vietnam', 'flag' => '🇻🇳', 'status' => 'ongoing', 'transport' => 'bus', 'currency' => 'USD', 'photos' => ['photo-1528127269322-539801943592', 'photo-1583417319070-4a69db38a482', 'photo-1528181304800-259b08848526'], 'stops' => [['Hanoi', 21.0278, 105.8342], ['Ha Long Bay', 20.9101, 107.1839], ['Hoi An', 15.8801, 108.3380]]],
-            ['name' => 'Santorini Sunsets', 'destination' => 'Santorini, Greece', 'flag' => '🇬🇷', 'status' => 'completed', 'transport' => 'flight', 'currency' => 'EUR', 'photos' => ['photo-1570077188670-e3a8d69ac5ff', 'photo-1613395877344-13d4a8e0d49e', 'photo-1529260830199-42c24126f198'], 'stops' => [['Santorini Airport', 36.3992, 25.4793], ['Oia', 36.4618, 25.3753], ['Fira', 36.4163, 25.4319]]],
-            ['name' => 'Patagonia Trek', 'destination' => 'Torres del Paine, Chile', 'flag' => '🇨🇱', 'status' => 'completed', 'transport' => 'flight', 'currency' => 'USD', 'photos' => ['photo-1464822759023-fed622ff2c3b', 'photo-1501785888041-af3ef285b470', 'photo-1587595431973-160d0d94add1'], 'stops' => [['Punta Arenas', -53.1638, -70.9171], ['Torres del Paine', -50.9423, -73.4068], ['Grey Glacier', -51.0253, -73.1811]]],
+            ['name' => 'Everest Base Camp Trek', 'destination' => 'Solukhumbu, Nepal', 'flag' => '🇳🇵', 'status' => 'completed', 'transport' => 'flight', 'stops' => [['Lukla', 27.6869, 86.7314], ['Namche Bazaar', 27.8069, 86.7140], ['Everest Base Camp', 28.0026, 86.8528]]],
+            ['name' => 'Annapurna Circuit', 'destination' => 'Manang, Nepal', 'flag' => '🇳🇵', 'status' => 'ongoing', 'transport' => 'bus', 'stops' => [['Besisahar', 28.2333, 84.3667], ['Manang', 28.6667, 84.0167], ['Thorong La Pass', 28.7911, 83.9339]]],
+            ['name' => 'Pokhara Lakeside Escape', 'destination' => 'Pokhara, Nepal', 'flag' => '🇳🇵', 'status' => 'completed', 'transport' => 'flight', 'stops' => [['Pokhara Airport', 28.2009, 83.9820], ['Phewa Lake', 28.2096, 83.9497], ['Sarangkot', 28.2380, 83.9530]]],
+            ['name' => 'Chitwan Jungle Safari', 'destination' => 'Chitwan, Nepal', 'flag' => '🇳🇵', 'status' => 'completed', 'transport' => 'bus', 'stops' => [['Bharatpur', 27.6770, 84.4330], ['Sauraha', 27.5769, 84.5061], ['Chitwan National Park', 27.5291, 84.3542]]],
+            ['name' => 'Kathmandu Valley Heritage Tour', 'destination' => 'Kathmandu, Nepal', 'flag' => '🇳🇵', 'status' => 'upcoming', 'transport' => 'car', 'stops' => [['Tribhuvan Airport', 27.6966, 85.3591], ['Boudhanath', 27.7215, 85.3620], ['Patan Durbar Square', 27.6727, 85.3247]]],
+            ['name' => 'Lumbini Pilgrimage', 'destination' => 'Lumbini, Nepal', 'flag' => '🇳🇵', 'status' => 'completed', 'transport' => 'bus', 'stops' => [['Bhairahawa', 27.5058, 83.4160], ['Lumbini Garden', 27.4833, 83.2767], ['Kapilvastu', 27.5667, 83.0500]]],
+            ['name' => 'Bandipur Hill Town Getaway', 'destination' => 'Bandipur, Nepal', 'flag' => '🇳🇵', 'status' => 'completed', 'transport' => 'car', 'stops' => [['Dumre', 27.9500, 84.4000], ['Bandipur Bazaar', 27.9350, 84.4083], ['Tundikhel Viewpoint', 27.9367, 84.4100]]],
+            ['name' => 'Mustang Desert Trail', 'destination' => 'Mustang, Nepal', 'flag' => '🇳🇵', 'status' => 'ongoing', 'transport' => 'flight', 'stops' => [['Jomsom', 28.7807, 83.7259], ['Kagbeni', 28.8377, 83.7863], ['Lo Manthang', 29.1846, 83.9531]]],
+            ['name' => 'Rara Lake Expedition', 'destination' => 'Mugu, Nepal', 'flag' => '🇳🇵', 'status' => 'completed', 'transport' => 'flight', 'stops' => [['Nepalgunj', 28.0500, 81.6167], ['Talcha Airport', 29.3167, 82.1833], ['Rara Lake', 29.5236, 82.0806]]],
+            ['name' => 'Ilam Tea Garden Trail', 'destination' => 'Ilam, Nepal', 'flag' => '🇳🇵', 'status' => 'completed', 'transport' => 'bus', 'stops' => [['Kakarvitta', 26.6167, 88.1667], ['Ilam Bazaar', 26.9088, 87.9280], ['Mai Pokhari', 26.8628, 87.9273]]],
+            ['name' => 'Janakpur Cultural Journey', 'destination' => 'Janakpur, Nepal', 'flag' => '🇳🇵', 'status' => 'upcoming', 'transport' => 'flight', 'stops' => [['Janakpur Airport', 26.7288, 85.9252], ['Janaki Mandir', 26.7271, 85.9247], ['Ram Sagar Pond', 26.7180, 85.9350]]],
+            ['name' => 'Gosaikunda Sacred Lakes Trek', 'destination' => 'Rasuwa, Nepal', 'flag' => '🇳🇵', 'status' => 'completed', 'transport' => 'bus', 'stops' => [['Dhunche', 28.1000, 85.3000], ['Sing Gompa', 28.1333, 85.3167], ['Gosaikunda Lake', 28.0833, 85.4167]]],
+            ['name' => 'Langtang Valley Trek', 'destination' => 'Langtang, Nepal', 'flag' => '🇳🇵', 'status' => 'ongoing', 'transport' => 'bus', 'stops' => [['Syabrubesi', 28.1667, 85.3500], ['Lama Hotel', 28.1833, 85.4000], ['Kyanjin Gompa', 28.2167, 85.5667]]],
+            ['name' => 'Bardia Wildlife Safari', 'destination' => 'Bardia, Nepal', 'flag' => '🇳🇵', 'status' => 'completed', 'transport' => 'flight', 'stops' => [['Nepalgunj', 28.0500, 81.6167], ['Thakurdwara', 28.3667, 81.3333], ['Bardia National Park', 28.4167, 81.3333]]],
+            ['name' => 'Manaslu Circuit Trek', 'destination' => 'Gorkha, Nepal', 'flag' => '🇳🇵', 'status' => 'completed', 'transport' => 'bus', 'stops' => [['Machha Khola', 28.1167, 84.9667], ['Samagaon', 28.5667, 84.6167], ['Larkya La Pass', 28.6167, 84.5500]]],
         ];
 
         foreach ($trips as $i => $data) {
@@ -69,7 +77,7 @@ class PublicTripsSeeder extends Seeder
             $numPhotos = 5 + ($i % 4);
             $numNotes = 2 + ($i % 3);
             $numExpenses = 6 + ($i % 5);
-            $budget = 1500 + ($i * 350) % 4000;
+            $budget = 15000 + ($i * 3500) % 40000;
             $spent = (int) ($budget * (0.4 + (($i * 13) % 50) / 100));
 
             $trip = Trip::create([
@@ -82,8 +90,8 @@ class PublicTripsSeeder extends Seeder
                 'end_date' => now()->subDays(50 - $i * 4),
                 'budget' => $budget,
                 'spent' => $data['status'] === 'upcoming' ? 0 : $spent,
-                'currency' => $data['currency'],
-                'cover_photo' => "https://images.unsplash.com/{$data['photos'][0]}?w=800",
+                'currency' => 'NPR',
+                'cover_photo' => "https://images.unsplash.com/{$nepalPhotos[$i % count($nepalPhotos)]}?w=800",
                 'description' => "An unforgettable journey through {$data['destination']}.",
                 'transport' => $data['transport'],
                 'visibility' => 'public',
@@ -110,7 +118,7 @@ class PublicTripsSeeder extends Seeder
             for ($p = 0; $p < $numPhotos; $p++) {
                 $stop = $data['stops'][$p % count($data['stops'])];
                 $trip->photos()->create([
-                    'url' => "https://images.unsplash.com/{$data['photos'][$p % count($data['photos'])]}?w=700",
+                    'url' => "https://images.unsplash.com/{$nepalPhotos[($i + $p) % count($nepalPhotos)]}?w=700",
                     'caption' => $photoCaptions[($i + $p) % count($photoCaptions)],
                     'lat' => $stop[1],
                     'lng' => $stop[2],
@@ -135,8 +143,8 @@ class PublicTripsSeeder extends Seeder
                 $group = $expensePool[$e % count($expensePool)];
                 $trip->expenses()->create([
                     'description' => $group['items'][$e % count($group['items'])],
-                    'amount' => 8 + (($i + $e) * 17) % 280,
-                    'currency' => $data['currency'],
+                    'amount' => 200 + (($i + $e) * 170) % 2800,
+                    'currency' => 'NPR',
                     'date' => now()->subDays(53 - $i * 4 - $e),
                     'category' => $group['category'],
                     'icon' => $group['icon'],
