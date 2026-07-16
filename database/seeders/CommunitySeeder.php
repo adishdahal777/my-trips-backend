@@ -222,8 +222,8 @@ class CommunitySeeder extends Seeder
                     'destination' => $data['destination'],
                     'flag' => '🇳🇵',
                     'status' => 'completed',
-                    'start_date' => now()->subDays(20 + $ti * 5),
-                    'end_date' => now()->subDays(18 + $ti * 5),
+                    'start_date' => now()->subDays(20 + $ai * 15 + $ti * 5),
+                    'end_date' => now()->subDays(18 + $ai * 15 + $ti * 5),
                     'budget' => $data['budget'],
                     'spent' => $data['spent'],
                     'currency' => 'NPR',
@@ -256,14 +256,14 @@ class CommunitySeeder extends Seeder
                     'caption' => 'Golden hour over the valley',
                     'lat' => $data['stops'][0][1],
                     'lng' => $data['stops'][0][2],
-                    'date' => now()->subDays(19 + $ti * 5),
+                    'date' => now()->subDays(19 + $ai * 15 + $ti * 5),
                 ]);
 
                 $trip->notes()->create([
                     'title' => 'Great trip',
                     'body' => $data['note'],
                     'mood' => '😍',
-                    'date' => now()->subDays(19 + $ti * 5),
+                    'date' => now()->subDays(19 + $ai * 15 + $ti * 5),
                     'color' => '#FFF3E0',
                 ]);
 
@@ -286,7 +286,7 @@ class CommunitySeeder extends Seeder
                         'description' => $item['description'],
                         'amount' => $amount,
                         'currency' => 'NPR',
-                        'date' => now()->subDays(19 + $ti * 5 - $bi),
+                        'date' => now()->subDays(19 + $ai * 15 + $ti * 5 - $bi),
                         'category' => $item['category'],
                         'icon' => $item['icon'],
                         'ai_suggested' => false,
