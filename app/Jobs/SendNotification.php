@@ -25,7 +25,7 @@ class SendNotification implements ShouldQueue
     {
         $user = User::find($this->userId);
 
-        if (! $user) {
+        if (! $user || ($this->type !== 'test' && ! $user->allowsNotification($this->type))) {
             return;
         }
 

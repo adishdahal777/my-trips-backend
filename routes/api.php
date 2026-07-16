@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\CommentController;
 use App\Http\Controllers\Api\DestinationController;
 use App\Http\Controllers\Api\DeviceTokenController;
 use App\Http\Controllers\Api\NotificationController;
+use App\Http\Controllers\Api\NotificationSettingsController;
 use App\Http\Controllers\Api\ExpenseController;
 use App\Http\Controllers\Api\FollowController;
 use App\Http\Controllers\Api\LandingController;
@@ -53,6 +54,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/notifications', [NotificationController::class, 'index']);
     Route::post('/notifications/{notification}/read', [NotificationController::class, 'markRead']);
     Route::post('/notifications/read-all', [NotificationController::class, 'markAllRead']);
+
+    Route::get('/notification-settings', [NotificationSettingsController::class, 'show']);
+    Route::put('/notification-settings', [NotificationSettingsController::class, 'update']);
 
     Route::get('/recommendations', [RecommendationController::class, 'index']);
 
