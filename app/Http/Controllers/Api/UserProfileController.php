@@ -95,7 +95,7 @@ class UserProfileController extends Controller
 
         if ($request->hasFile('avatar')) {
             $user = $request->user();
-            $path = $request->file('avatar')->store('avatars', 's3');
+            $path = $request->file('avatar')->store('avatars', ['disk' => 's3', 'visibility' => 'public']);
             $url = Storage::disk('s3')->url($path);
 
             $user->profile()->updateOrCreate(

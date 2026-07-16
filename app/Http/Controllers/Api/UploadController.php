@@ -19,7 +19,7 @@ class UploadController extends Controller
             return response()->json(['error' => $validator->errors()], 422);
         }
 
-        $path = $request->file('image')->store('uploads', 's3');
+        $path = $request->file('image')->store('uploads', ['disk' => 's3', 'visibility' => 'public']);
 
         return response()->json(['url' => Storage::disk('s3')->url($path)]);
     }
