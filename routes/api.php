@@ -3,6 +3,8 @@
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CommentController;
 use App\Http\Controllers\Api\DestinationController;
+use App\Http\Controllers\Api\DeviceTokenController;
+use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\Api\ExpenseController;
 use App\Http\Controllers\Api\FollowController;
 use App\Http\Controllers\Api\LandingController;
@@ -44,6 +46,13 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/profile/avatar', [UserProfileController::class, 'uploadAvatar']);
 
     Route::post('/uploads/image', [UploadController::class, 'store']);
+
+    Route::post('/device-tokens', [DeviceTokenController::class, 'store']);
+    Route::delete('/device-tokens', [DeviceTokenController::class, 'destroy']);
+
+    Route::get('/notifications', [NotificationController::class, 'index']);
+    Route::post('/notifications/{notification}/read', [NotificationController::class, 'markRead']);
+    Route::post('/notifications/read-all', [NotificationController::class, 'markAllRead']);
 
     Route::get('/recommendations', [RecommendationController::class, 'index']);
 

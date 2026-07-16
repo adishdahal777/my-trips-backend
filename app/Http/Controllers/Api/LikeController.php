@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Jobs\SendNotification;
 use App\Models\Like;
 use App\Models\Trip;
 use Illuminate\Database\QueryException;
@@ -26,6 +27,17 @@ class LikeController extends Controller
                 // Concurrent request already created the like — treat as success.
             }
             $liked = true;
+
+            if ($trip->user_id !== $request->user()->id) {
+                SendNotification::dispatch(
+                    userId: $trip->user_id,
+                    actorId: $request->user()->id,
+                    type: 'trip_liked',
+                    tripId: $trip->id,
+                    title: 'New like',
+                    body: "{$request->user()->name} liked your trip \"{$trip->name}\".",
+                );
+            }
         }
 
         return response()->json([

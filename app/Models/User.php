@@ -71,4 +71,14 @@ class User extends Authenticatable
     {
         return $this->hasMany(Follow::class, 'followee_id');
     }
+
+    public function deviceTokens(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(DeviceToken::class);
+    }
+
+    public function appNotifications(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(AppNotification::class);
+    }
 }

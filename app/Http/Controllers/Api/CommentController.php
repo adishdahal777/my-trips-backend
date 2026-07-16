@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Jobs\SendNotification;
 use App\Models\Trip;
 use App\Models\UserProfile;
 use Illuminate\Http\Request;
@@ -51,6 +52,17 @@ class CommentController extends Controller
             'user_id' => $request->user()->id,
             'body' => $request->body,
         ]);
+
+        if ($trip->user_id !== $request->user()->id) {
+            SendNotification::dispatch(
+                userId: $trip->user_id,
+                actorId: $request->user()->id,
+                type: 'trip_commented',
+                tripId: $trip->id,
+                title: 'New comment',
+                body: "{$request->user()->name} commented on your trip \"{$trip->name}\".",
+            );
+        }
 
         return response()->json([
             'comment' => [

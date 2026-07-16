@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\PublicUserResource;
+use App\Jobs\SendNotification;
 use App\Models\Follow;
 use App\Models\User;
 use Illuminate\Database\QueryException;
@@ -29,6 +30,15 @@ class FollowController extends Controller
                 // race — already followed
             }
             $following = true;
+
+            SendNotification::dispatch(
+                userId: $user->id,
+                actorId: $request->user()->id,
+                type: 'new_follower',
+                tripId: null,
+                title: 'New follower',
+                body: "{$request->user()->name} started following you.",
+            );
         }
 
         return response()->json([

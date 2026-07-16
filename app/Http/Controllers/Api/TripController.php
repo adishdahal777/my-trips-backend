@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\TripResource;
+use App\Jobs\SendNotification;
 use App\Models\Trip;
 use App\Models\TripView;
 use Illuminate\Http\Request;
@@ -173,6 +174,8 @@ class TripController extends Controller
             }
         }
 
+        $wasPrivate = $trip->visibility !== 'public';
+
         DB::transaction(function () use ($request, $trip, $updates) {
             $trip->update($updates);
 
@@ -190,6 +193,19 @@ class TripController extends Controller
                 }
             }
         });
+
+        if ($wasPrivate && $trip->visibility === 'public') {
+            $trip->user->followers()->with('follower')->get()->each(function ($follow) use ($trip, $request) {
+                SendNotification::dispatch(
+                    userId: $follow->follower_id,
+                    actorId: $request->user()->id,
+                    type: 'followed_user_trip',
+                    tripId: $trip->id,
+                    title: 'New trip',
+                    body: "{$request->user()->name} added a new trip \"{$trip->name}\".",
+                );
+            });
+        }
 
         return new TripResource($this->loadTrip($trip));
     }
