@@ -14,8 +14,48 @@ class CommunitySeeder extends Seeder
     public function run(): void
     {
         $namedUsers = [
-            ['name' => 'Swasti Chapagain', 'email' => 'fb.royaladish@gmail.com', 'bio' => 'Exploring Nepal one trail at a time 🏔️'],
-            ['name' => 'Adish Dahal', 'email' => 'me.adishdahal@gmail.com', 'bio' => 'Builder of MyTrips. Traveler at heart.'],
+            [
+                'name' => 'Swasti Chapagain',
+                'email' => 'fb.royaladish@gmail.com',
+                'bio' => 'Exploring Nepal one trail at a time 🏔️',
+                'trips' => [
+                    [
+                        'name' => 'Weekend in Pokhara',
+                        'destination' => 'Pokhara, Nepal',
+                        'photo' => 'photo-1544735716-392fe2489ffa',
+                        'stops' => [['Lakeside', 28.2096, 83.9497], ['World Peace Pagoda', 28.2032, 83.9424]],
+                        'note' => "Woke up early for the sunrise over the Annapurna range from the pagoda — worth every step.",
+                    ],
+                    [
+                        'name' => 'Chitwan Jungle Escape',
+                        'destination' => 'Chitwan, Nepal',
+                        'photo' => 'photo-1605649487212-47bdab064df7',
+                        'stops' => [['Sauraha', 27.5769, 84.5061], ['Chitwan National Park', 27.5291, 84.3542]],
+                        'note' => "Spotted a rhino on the jungle walk! Definitely doing the canoe ride again next time.",
+                    ],
+                ],
+            ],
+            [
+                'name' => 'Adish Dahal',
+                'email' => 'me.adishdahal@gmail.com',
+                'bio' => 'Builder of MyTrips. Traveler at heart.',
+                'trips' => [
+                    [
+                        'name' => 'Kathmandu Heritage Walk',
+                        'destination' => 'Kathmandu, Nepal',
+                        'photo' => 'photo-1605640840605-14ac1855827b',
+                        'stops' => [['Durbar Square', 27.7040, 85.3070], ['Swayambhunath', 27.7149, 85.2903]],
+                        'note' => "Spent the whole afternoon wandering Durbar Square — the woodwork on the temples is unreal.",
+                    ],
+                    [
+                        'name' => 'Everest View Trek',
+                        'destination' => 'Solukhumbu, Nepal',
+                        'photo' => 'photo-1526772662000-3f88f10405ff',
+                        'stops' => [['Lukla', 27.6869, 86.7314], ['Namche Bazaar', 27.8069, 86.7140]],
+                        'note' => "Namche at sunset with the first real view of Everest in the distance — still can't believe it.",
+                    ],
+                ],
+            ],
         ];
 
         $firstNames = [
@@ -53,7 +93,24 @@ class CommunitySeeder extends Seeder
             }
         }
 
-        $namedAccounts = collect($namedUsers)->map(function ($data) {
+        // Deterministic, visually distinct avatar per user — pravatar.cc serves 70 unique real portraits.
+        $avatarFor = fn (int $userId) => "https://i.pravatar.cc/300?img=" . (($userId % 70) + 1);
+
+        $setDistinctAvatar = function (User $user, ?string $bio = null, array $extra = []) use ($avatarFor) {
+            $profile = UserProfile::firstOrCreate(['user_id' => $user->id], []);
+
+            // Don't clobber an avatar a real user already set for themselves via the app.
+            if (! $profile->avatar || $profile->avatar === UserProfile::DEFAULT_AVATAR) {
+                $profile->avatar = $avatarFor($user->id);
+            }
+            if ($bio && ! $profile->bio) {
+                $profile->bio = $bio;
+            }
+            $profile->fill($extra);
+            $profile->save();
+        };
+
+        $namedAccounts = collect($namedUsers)->map(function ($data) use ($setDistinctAvatar) {
             $user = User::firstOrCreate(
                 ['email' => $data['email']],
                 ['name' => $data['name']]
@@ -63,24 +120,18 @@ class CommunitySeeder extends Seeder
                 $user->update(['name' => $data['name']]);
             }
 
-            UserProfile::firstOrCreate(
-                ['user_id' => $user->id],
-                ['bio' => $data['bio'], 'avatar' => UserProfile::DEFAULT_AVATAR, 'countries' => 3, 'km_traveled' => 4200]
-            );
+            $setDistinctAvatar($user, $data['bio'], ['countries' => 3, 'km_traveled' => 4200]);
 
             return $user;
         });
 
-        $fillerAccounts = collect($fillerNames)->map(function ($name) {
+        $fillerAccounts = collect($fillerNames)->map(function ($name) use ($setDistinctAvatar) {
             $user = User::firstOrCreate(
                 ['email' => strtolower(str_replace(' ', '.', $name)) . '@mytrips.demo'],
                 ['name' => $name]
             );
 
-            UserProfile::firstOrCreate(
-                ['user_id' => $user->id],
-                ['avatar' => UserProfile::DEFAULT_AVATAR]
-            );
+            $setDistinctAvatar($user);
 
             return $user;
         });
@@ -88,6 +139,8 @@ class CommunitySeeder extends Seeder
         $coreTravelers = collect($existingNames)->map(
             fn ($name) => User::where('email', strtolower(str_replace(' ', '.', $name)) . '@mytrips.demo')->first()
         )->filter();
+
+        $coreTravelers->each(fn (User $user) => $setDistinctAvatar($user));
 
         $everyone = $coreTravelers->merge($namedAccounts)->merge($fillerAccounts)->values();
 
@@ -127,34 +180,26 @@ class CommunitySeeder extends Seeder
             }
         }
 
-        $this->seedShowcaseTrips($namedAccounts, $everyone);
+        $this->seedShowcaseTrips($namedUsers, $namedAccounts, $everyone);
     }
 
-    private function seedShowcaseTrips($namedAccounts, $everyone): void
+    private function seedShowcaseTrips(array $namedUsers, $namedAccounts, $everyone): void
     {
-        $nepalPhotos = [
-            'photo-1544735716-392fe2489ffa',
-            'photo-1526772662000-3f88f10405ff',
-            'photo-1605640840605-14ac1855827b',
-            'photo-1605649487212-47bdab064df7',
-            'photo-1544620347-c4fd4a3d5957',
-        ];
-
-        $showcaseTrips = [
-            [
-                'name' => 'Weekend in Pokhara',
-                'destination' => 'Pokhara, Nepal',
-                'stops' => [['Lakeside', 28.2096, 83.9497], ['World Peace Pagoda', 28.2032, 83.9424]],
-            ],
-            [
-                'name' => 'Kathmandu Heritage Walk',
-                'destination' => 'Kathmandu, Nepal',
-                'stops' => [['Durbar Square', 27.7040, 85.3070], ['Swayambhunath', 27.7149, 85.2903]],
-            ],
-        ];
+        // Earlier runs of this seeder gave both named accounts the exact same two trip
+        // names/content — clean up the mismatched leftovers before reseeding distinct ones.
+        $staleCrossNames = ['Weekend in Pokhara', 'Kathmandu Heritage Walk'];
+        foreach ($namedAccounts as $ai => $account) {
+            $ownNames = collect($namedUsers[$ai]['trips'])->pluck('name');
+            Trip::where('user_id', $account->id)
+                ->whereIn('name', $staleCrossNames)
+                ->whereNotIn('name', $ownNames)
+                ->delete();
+        }
 
         foreach ($namedAccounts as $ai => $account) {
-            foreach ($showcaseTrips as $ti => $data) {
+            $trips = $namedUsers[$ai]['trips'];
+
+            foreach ($trips as $ti => $data) {
                 if (Trip::where('user_id', $account->id)->where('name', $data['name'])->exists()) {
                     continue;
                 }
@@ -170,7 +215,7 @@ class CommunitySeeder extends Seeder
                     'budget' => 25000,
                     'spent' => 18500,
                     'currency' => 'NPR',
-                    'cover_photo' => "https://images.unsplash.com/{$nepalPhotos[($ai + $ti) % count($nepalPhotos)]}?w=800",
+                    'cover_photo' => "https://images.unsplash.com/{$data['photo']}?w=800",
                     'description' => "A memorable trip to {$data['destination']}.",
                     'transport' => 'car',
                     'visibility' => 'public',
@@ -195,7 +240,7 @@ class CommunitySeeder extends Seeder
                 }
 
                 $trip->photos()->create([
-                    'url' => "https://images.unsplash.com/{$nepalPhotos[$ai % count($nepalPhotos)]}?w=700",
+                    'url' => "https://images.unsplash.com/{$data['photo']}?w=700",
                     'caption' => 'Golden hour over the valley',
                     'lat' => $data['stops'][0][1],
                     'lng' => $data['stops'][0][2],
@@ -204,7 +249,7 @@ class CommunitySeeder extends Seeder
 
                 $trip->notes()->create([
                     'title' => 'Great trip',
-                    'body' => "Loved every moment of {$data['destination']} — already planning the next one.",
+                    'body' => $data['note'],
                     'mood' => '😍',
                     'date' => now()->subDays(19 + $ti * 5),
                     'color' => '#FFF3E0',
