@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\LikeController;
 use App\Http\Controllers\Api\NoteController;
 use App\Http\Controllers\Api\PhotoController;
 use App\Http\Controllers\Api\PublicController;
+use App\Http\Controllers\Api\RecommendationController;
 use App\Http\Controllers\Api\TripController;
 use App\Http\Controllers\Api\UploadController;
 use App\Http\Controllers\Api\UserProfileController;
@@ -37,6 +38,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/profile/avatar', [UserProfileController::class, 'uploadAvatar']);
 
     Route::post('/uploads/image', [UploadController::class, 'store']);
+
+    Route::get('/recommendations', [RecommendationController::class, 'index']);
 
     Route::apiResource('trips', TripController::class);
 

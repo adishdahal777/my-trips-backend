@@ -51,4 +51,14 @@ class User extends Authenticatable
     {
         return $this->hasOne(UserProfile::class);
     }
+
+    public function trips(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Trip::class);
+    }
+
+    public function tripViews(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(TripView::class);
+    }
 }

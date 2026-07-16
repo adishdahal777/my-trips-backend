@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\TripResource;
 use App\Models\Trip;
+use App\Models\TripView;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -101,6 +102,8 @@ class TripController extends Controller
     public function show(Request $request, Trip $trip)
     {
         abort_unless($trip->user_id === $request->user()->id, 403);
+
+        TripView::create(['user_id' => $request->user()->id, 'trip_id' => $trip->id]);
 
         return new TripResource($this->loadTrip($trip));
     }

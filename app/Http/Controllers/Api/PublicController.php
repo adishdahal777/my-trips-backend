@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\TripResource;
 use App\Models\Trip;
+use App\Models\TripView;
+use Illuminate\Http\Request;
 
 class PublicController extends Controller
 {
@@ -30,9 +32,14 @@ class PublicController extends Controller
         return TripResource::collection($trips);
     }
 
-    public function show(Trip $trip)
+    public function show(Request $request, Trip $trip)
     {
         abort_unless($trip->visibility === 'public', 404);
+
+        $viewer = $request->user('sanctum');
+        if ($viewer && $viewer->id !== $trip->user_id) {
+            TripView::create(['user_id' => $viewer->id, 'trip_id' => $trip->id]);
+        }
 
         $trip->load(['routeStops', 'expenses', 'photos', 'notes', 'user.profile'])
             ->loadCount(['likes', 'comments']);
