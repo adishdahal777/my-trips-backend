@@ -62,30 +62,28 @@
                 </div>
             </div>
             <div class="ft-hero-cards reveal-scale reveal-delay-2">
-                <div class="ft-hero-card ft-hc-1">
-                    <img src="https://images.unsplash.com/photo-1539635278303-d4002c07eae3?w=400&q=80" alt="" />
-                    <div class="ft-hc-body">
-                        <span class="ft-hc-status ongoing">Ongoing</span>
-                        <strong>Bali Adventure</strong>
-                        <span>12 stops · $1,240 spent</span>
+                @forelse ($publicTrips->take(3) as $index => $trip)
+                    <div class="ft-hero-card ft-hc-{{ $index + 1 }}">
+                        <img src="{{ $trip->cover_photo ?? 'https://images.unsplash.com/photo-1506929562872-bb421503ef21?w=400&q=80' }}" alt="" />
+                        <div class="ft-hc-body">
+                            <span class="ft-hc-status {{ $trip->status }}">{{ ucfirst($trip->status) }}</span>
+                            <strong>{{ $trip->name }}</strong>
+                            @if ($trip->status === 'upcoming')
+                                <span>Starts {{ $trip->start_date->format('M j') }}</span>
+                            @else
+                                <span>{{ $trip->route_stops_count }} stops · {{ $trip->currency }}{{ number_format($trip->spent) }} spent</span>
+                            @endif
+                        </div>
                     </div>
-                </div>
-                <div class="ft-hero-card ft-hc-2">
-                    <img src="https://images.unsplash.com/photo-1530789253388-582c481c54b0?w=400&q=80" alt="" />
-                    <div class="ft-hc-body">
-                        <span class="ft-hc-status completed">Completed</span>
-                        <strong>Kathmandu Valley</strong>
-                        <span>8 stops · $890 spent</span>
+                @empty
+                    <div class="ft-hero-card ft-hc-1">
+                        <img src="https://images.unsplash.com/photo-1506929562872-bb421503ef21?w=400&q=80" alt="" />
+                        <div class="ft-hc-body">
+                            <strong>No featured trips yet</strong>
+                            <span>Check back soon</span>
+                        </div>
                     </div>
-                </div>
-                <div class="ft-hero-card ft-hc-3">
-                    <img src="https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=400&q=80" alt="" />
-                    <div class="ft-hc-body">
-                        <span class="ft-hc-status upcoming">Upcoming</span>
-                        <strong>Swiss Alps Trek</strong>
-                        <span>Starts Aug 15</span>
-                    </div>
-                </div>
+                @endforelse
             </div>
         </div>
         <div class="ft-hero-scroll reveal">
@@ -112,7 +110,7 @@
                     <div class="ft-stat-label">Kilometers traveled</div>
                 </div>
                 <div class="ft-stat reveal reveal-delay-3">
-                    <div class="ft-stat-num" data-count="12400">12,400</div>
+                    <div class="ft-stat-num" data-count="{{ $totalPhotos }}">{{ number_format($totalPhotos) }}</div>
                     <div class="ft-stat-label">Photos captured</div>
                 </div>
             </div>

@@ -11,17 +11,20 @@ Route::get('/', function () {
     $publicTrips = Trip::where('visibility', 'public')
         ->where('is_featured', true)
         ->with('user')
+        ->withCount('routeStops')
         ->latest()
         ->limit(6)
         ->get();
 
     $totalTrips = Trip::where('visibility', 'public')->count();
     $totalUsers = \App\Models\User::count();
+    $totalPhotos = \App\Models\Photo::count();
 
     return view('pages.landing', [
         'publicTrips' => $publicTrips,
         'totalTrips' => $totalTrips,
         'totalUsers' => $totalUsers,
+        'totalPhotos' => $totalPhotos,
     ]);
 });
 
