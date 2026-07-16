@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-#[Fillable(['user_id', 'actor_id', 'trip_id', 'type', 'read_at'])]
+#[Fillable(['user_id', 'actor_id', 'trip_id', 'type', 'status', 'read_at'])]
 class AppNotification extends Model
 {
     protected function casts(): array

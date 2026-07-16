@@ -20,6 +20,8 @@ class NotificationController extends Controller
             'data' => $notifications->getCollection()->map(fn (AppNotification $n) => [
                 'id' => (string) $n->id,
                 'type' => $n->type,
+                'status' => $n->status,
+                'message' => $this->message($n),
                 'actor' => $n->actor ? [
                     'id' => (string) $n->actor->id,
                     'name' => $n->actor->name,
@@ -29,7 +31,7 @@ class NotificationController extends Controller
                 'readAt' => $n->read_at?->toISOString(),
                 'createdAt' => $n->created_at->toISOString(),
             ]),
-            'unreadCount' => $request->user()->appNotifications()->whereNull('read_at')->count(),
+            'unreadCount' => $request->user()->appNotifications()->where('status', 'unread')->count(),
             'meta' => [
                 'currentPage' => $notifications->currentPage(),
                 'lastPage' => $notifications->lastPage(),
@@ -42,15 +44,30 @@ class NotificationController extends Controller
     {
         abort_unless($notification->user_id === $request->user()->id, 403);
 
-        $notification->update(['read_at' => now()]);
+        $notification->update(['status' => 'read', 'read_at' => now()]);
 
         return response()->json(['message' => 'Marked as read.']);
     }
 
     public function markAllRead(Request $request)
     {
-        $request->user()->appNotifications()->whereNull('read_at')->update(['read_at' => now()]);
+        $request->user()->appNotifications()->where('status', 'unread')->update(['status' => 'read', 'read_at' => now()]);
 
         return response()->json(['message' => 'All marked as read.']);
+    }
+
+    private function message(AppNotification $n): string
+    {
+        $actorName = $n->actor->name ?? 'Someone';
+        $tripName = $n->trip->name ?? 'your trip';
+
+        return match ($n->type) {
+            'new_follower' => "{$actorName} started following you.",
+            'trip_liked' => "{$actorName} liked your trip \"{$tripName}\".",
+            'trip_commented' => "{$actorName} commented on your trip \"{$tripName}\".",
+            'followed_user_trip' => "{$actorName} added a new trip \"{$tripName}\".",
+            'test' => 'This is a test push from the MyTrips admin panel.',
+            default => 'You have a new notification.',
+        };
     }
 }
