@@ -8,10 +8,13 @@ use App\Http\Controllers\Admin\RatingController as AdminRatingController;
 use App\Http\Controllers\Admin\TripController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\LandingController;
+use App\Http\Controllers\ProfileController;
 use App\Models\Trip;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [LandingController::class, 'index']);
+
+Route::get('/u/{user}', [ProfileController::class, 'show'])->name('profile.show');
 
 Route::get('/trip/{trip}', function (Trip $trip) {
     abort_unless($trip->visibility === 'public', 404);
