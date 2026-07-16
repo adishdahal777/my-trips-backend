@@ -212,13 +212,9 @@ class CommunitySeeder extends Seeder
             $trips = $namedUsers[$ai]['trips'];
 
             foreach ($trips as $ti => $data) {
-                $existing = Trip::where('user_id', $account->id)->where('name', $data['name'])->first();
-
-                if ($existing) {
-                    $existing->update(['budget' => $data['budget'], 'spent' => $data['spent']]);
-
-                    continue;
-                }
+                // Delete and recreate rather than patch in place — guarantees the expense
+                // breakdown below always matches `spent` exactly, even after reseeding.
+                Trip::where('user_id', $account->id)->where('name', $data['name'])->delete();
 
                 $trip = Trip::create([
                     'user_id' => $account->id,
@@ -271,15 +267,31 @@ class CommunitySeeder extends Seeder
                     'color' => '#FFF3E0',
                 ]);
 
-                $trip->expenses()->create([
-                    'description' => 'Hotel stay',
-                    'amount' => (int) round($data['spent'] * 0.4),
-                    'currency' => 'NPR',
-                    'date' => now()->subDays(19 + $ti * 5),
-                    'category' => 'Accommodation',
-                    'icon' => 'bed-outline',
-                    'ai_suggested' => false,
-                ]);
+                // Expense line items must sum exactly to the trip's `spent` total — real usage keeps
+                // these in sync (ExpenseController increments/decrements `spent` alongside each row),
+                // so seed data that doesn't match makes the spending-insight numbers look "wrong".
+                $breakdown = [
+                    ['description' => 'Hotel stay', 'category' => 'Accommodation', 'icon' => 'bed-outline', 'share' => 0.45],
+                    ['description' => 'Local food & dining', 'category' => 'Food', 'icon' => 'restaurant-outline', 'share' => 0.30],
+                    ['description' => 'Local transport', 'category' => 'Transport', 'icon' => 'car-outline', 'share' => 0.25],
+                ];
+                $remaining = $data['spent'];
+                foreach ($breakdown as $bi => $item) {
+                    $amount = $bi === count($breakdown) - 1
+                        ? $remaining
+                        : (int) round($data['spent'] * $item['share']);
+                    $remaining -= $amount;
+
+                    $trip->expenses()->create([
+                        'description' => $item['description'],
+                        'amount' => $amount,
+                        'currency' => 'NPR',
+                        'date' => now()->subDays(19 + $ti * 5 - $bi),
+                        'category' => $item['category'],
+                        'icon' => $item['icon'],
+                        'ai_suggested' => false,
+                    ]);
+                }
 
                 $likers = $everyone->reject(fn ($u) => $u->id === $account->id)->shuffle()->take(rand(15, 40));
                 foreach ($likers as $liker) {
