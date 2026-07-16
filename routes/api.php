@@ -35,6 +35,7 @@ Route::get('/feed', [PublicController::class, 'index']);
 Route::get('/public-trips/{trip}', [PublicController::class, 'show']);
 Route::get('/destinations', [DestinationController::class, 'index']);
 Route::get('/landing', [LandingController::class, 'index']);
+Route::get('/users/{user}', [FollowController::class, 'show']);
 
 // Protected Routes
 Route::middleware('auth:sanctum')->group(function () {
@@ -86,7 +87,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/users/{user}/follow', [FollowController::class, 'toggle']);
     Route::get('/users/{user}/followers', [FollowController::class, 'followers']);
     Route::get('/users/{user}/following', [FollowController::class, 'following']);
-    Route::get('/users/{user}', [FollowController::class, 'show']);
 
     Route::post('/destinations', [DestinationController::class, 'store']);
 

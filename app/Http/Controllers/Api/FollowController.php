@@ -79,9 +79,13 @@ class FollowController extends Controller
     {
         $user->loadCount(['followers', 'following']);
 
+        // Public route (no auth:sanctum middleware) so guests can view profiles too —
+        // resolve the sanctum guard explicitly to still compute isFollowing when a token is present.
+        $viewer = $request->user('sanctum');
+
         return (new PublicUserResource($user->load('profile')))->additional([
-            'isFollowing' => $request->user()
-                ? Follow::where('follower_id', $request->user()->id)->where('followee_id', $user->id)->exists()
+            'isFollowing' => $viewer
+                ? Follow::where('follower_id', $viewer->id)->where('followee_id', $user->id)->exists()
                 : false,
         ]);
     }
