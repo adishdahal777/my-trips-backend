@@ -71,7 +71,7 @@
                             @if ($trip->status === 'upcoming')
                                 <span>Starts {{ $trip->start_date->format('M j') }}</span>
                             @else
-                                <span>{{ $trip->route_stops_count }} stops · {{ $trip->currency }}{{ number_format($trip->spent) }} spent</span>
+                                <span>{{ $trip->route_stops_count }} stops · Rs {{ number_format($trip->spent) }} spent</span>
                             @endif
                         </div>
                     </div>
@@ -248,7 +248,7 @@
                                     <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg> {{ $trip->start_date->diffInDays($trip->end_date) }} days</span>
                                 @endif
                                 @if ($trip->budget > 0)
-                                    <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg> {{ $trip->currency }} {{ number_format($trip->budget) }}</span>
+                                    <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg> Rs {{ number_format($trip->budget) }}</span>
                                 @endif
                             </div>
                             <div class="ft-trip-user">

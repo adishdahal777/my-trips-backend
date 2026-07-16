@@ -57,7 +57,7 @@
 
                     <div class="mt-auto flex items-center justify-between text-xs text-muted-foreground">
                         <span>{{ $trip->start_date->format('M j') }} — {{ $trip->end_date->format('M j, Y') }}</span>
-                        <span>{{ $trip->currency }} {{ number_format($trip->budget) }}</span>
+                        <span>Rs {{ number_format($trip->budget) }}</span>
                     </div>
                 </div>
             </div>

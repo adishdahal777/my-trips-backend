@@ -119,7 +119,7 @@
                     <div class="ft-stat-label">Total stops</div>
                 </div>
                 <div class="ft-stat reveal reveal-delay-2">
-                    <div class="ft-stat-num">{{ $trip->currency }} {{ number_format($trip->spent ?: $trip->budget) }}</div>
+                    <div class="ft-stat-num">Rs {{ number_format($trip->spent ?: $trip->budget) }}</div>
                     <div class="ft-stat-label">{{ $trip->spent ? 'Total spent' : 'Budget' }}</div>
                 </div>
                 <div class="ft-stat reveal reveal-delay-3">
@@ -177,8 +177,8 @@
             <div class="wrap">
                 <div class="sec-head" style="justify-content:center;text-align:center;flex-direction:column;align-items:center;">
                     <span class="badge">Budget overview</span>
-                    <div class="sec-title" style="margin-top:12px;">{{ $trip->currency }} {{ number_format($totalSpent) }} spent of {{ $trip->currency }} {{ number_format($trip->budget) }}</div>
-                    <div class="sec-sub" style="text-align:center;">{{ $trip->currency }} {{ number_format($remaining) }} remaining · {{ $budgetPct }}% of budget utilized</div>
+                    <div class="sec-title" style="margin-top:12px;">Rs {{ number_format($totalSpent) }} spent of Rs {{ number_format($trip->budget) }}</div>
+                    <div class="sec-sub" style="text-align:center;">Rs {{ number_format($remaining) }} remaining · {{ $budgetPct }}% of budget utilized</div>
                 </div>
 
                 <div class="ft-features-showcase reveal-scale" style="margin-top:24px;">
@@ -189,13 +189,13 @@
                             <div class="tp-budget-fill" style="width:{{ $budgetPct }}%;height:100%;"></div>
                         </div>
                         <div style="display:flex;justify-content:space-between;font-size:13px;color:var(--text-muted);margin-bottom:24px;">
-                            <span>Spent {{ $trip->currency }} {{ number_format($totalSpent) }}</span>
-                            <span>Remaining {{ $trip->currency }} {{ number_format($remaining) }}</span>
+                            <span>Spent Rs {{ number_format($totalSpent) }}</span>
+                            <span>Remaining Rs {{ number_format($remaining) }}</span>
                         </div>
                         <div class="ft-fs-stats">
                             @foreach ($expensesByCategory->take(3) as $cat => $data)
                             <div class="ft-fs-stat">
-                                <strong>{{ $categoryIcons[$cat] ?? '📦' }} {{ $cat }} — {{ $trip->currency }} {{ number_format($data['total']) }}</strong>
+                                <strong>{{ $categoryIcons[$cat] ?? '📦' }} {{ $cat }} — Rs {{ number_format($data['total']) }}</strong>
                                 <span>{{ $trip->budget > 0 ? round(($data['total'] / $trip->budget) * 100) : 0 }}% of budget · {{ $data['count'] }} expense{{ $data['count'] > 1 ? 's' : '' }}</span>
                             </div>
                             @endforeach
@@ -212,7 +212,7 @@
                                 <div style="flex:1;">
                                     <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
                                         <span style="font-size:13px;font-weight:600;color:var(--text);">{{ $cat }}</span>
-                                        <span style="font-size:13px;font-weight:700;color:var(--text);">{{ $trip->currency }} {{ number_format($data['total']) }}</span>
+                                        <span style="font-size:13px;font-weight:700;color:var(--text);">Rs {{ number_format($data['total']) }}</span>
                                     </div>
                                     <div style="height:6px;background:var(--surface-3);border-radius:var(--r-pill);overflow:hidden;">
                                         <div style="height:100%;width:{{ $pct }}%;background:{{ $categoryColors[$cat] ?? '#8A877F' }};border-radius:var(--r-pill);transition:width 1s cubic-bezier(0.16,1,0.3,1);"></div>
@@ -412,8 +412,8 @@
                 </div>
                 <div class="ft-cta-content" style="padding:60px 40px;">
                     <span style="font-size:14px;color:rgba(255,255,255,0.7);">Total spent on this trip</span>
-                    <div style="font-family:var(--font-display);font-size:clamp(48px,6vw,72px);font-weight:800;color:#fff;letter-spacing:-0.03em;margin:8px 0;">{{ $trip->currency }} {{ number_format($totalSpent) }}</div>
-                    <span style="font-size:16px;color:rgba(255,255,255,0.7);">Remaining: <strong style="color:#fff;">{{ $trip->currency }} {{ number_format($remaining) }}</strong></span>
+                    <div style="font-family:var(--font-display);font-size:clamp(48px,6vw,72px);font-weight:800;color:#fff;letter-spacing:-0.03em;margin:8px 0;">Rs {{ number_format($totalSpent) }}</div>
+                    <span style="font-size:16px;color:rgba(255,255,255,0.7);">Remaining: <strong style="color:#fff;">Rs {{ number_format($remaining) }}</strong></span>
                 </div>
             </div>
         </section>
@@ -435,7 +435,7 @@
                         <div class="ft-fc-icon" style="background:{{ $categoryColors[$cat] ?? '#8A877F' }}15;color:{{ $categoryColors[$cat] ?? '#8A877F' }};">
                             <span style="font-size:22px;">{{ $categoryIcons[$cat] ?? '📦' }}</span>
                         </div>
-                        <h3 style="font-size:20px;">{{ $trip->currency }} {{ number_format($data['total']) }}</h3>
+                        <h3 style="font-size:20px;">Rs {{ number_format($data['total']) }}</h3>
                         <p style="margin-bottom:8px;">{{ $cat }}</p>
                         <div style="height:4px;background:var(--surface-3);border-radius:var(--r-pill);overflow:hidden;">
                             <div style="height:100%;width:{{ $pct }}%;background:{{ $categoryColors[$cat] ?? '#8A877F' }};border-radius:var(--r-pill);transition:width 1s cubic-bezier(0.16,1,0.3,1);"></div>
@@ -467,7 +467,7 @@
                                 <div style="font-size:14px;font-weight:500;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ $expense->description }}</div>
                                 <div style="font-size:12px;color:var(--text-muted);margin-top:2px;">{{ $expense->category }} · {{ $expense->date->format('M j') }}</div>
                             </div>
-                            <div style="font-family:var(--font-display);font-size:15px;font-weight:700;color:var(--coral);white-space:nowrap;">-{{ $expense->currency }} {{ number_format($expense->amount, 2) }}</div>
+                            <div style="font-family:var(--font-display);font-size:15px;font-weight:700;color:var(--coral);white-space:nowrap;">-Rs {{ number_format($expense->amount, 2) }}</div>
                         </div>
                         @endforeach
                     </div>
