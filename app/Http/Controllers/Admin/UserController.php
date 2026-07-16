@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Jobs\SendNotification;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -89,6 +90,24 @@ class UserController extends Controller
         $user->syncRoles([$data['role']]);
 
         return redirect()->route('admin.users.index')->with('success', 'User updated successfully.');
+    }
+
+    public function testNotification(User $user)
+    {
+        if ($user->deviceTokens()->count() === 0) {
+            return back()->withErrors(['user' => "{$user->name} has no registered devices to notify."]);
+        }
+
+        SendNotification::dispatch(
+            userId: $user->id,
+            actorId: auth()->id(),
+            type: 'test',
+            tripId: null,
+            title: 'Test notification',
+            body: 'This is a test push from the MyTrips admin panel.',
+        );
+
+        return back()->with('success', "Test notification sent to {$user->name}.");
     }
 
     public function destroy(User $user)

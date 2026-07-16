@@ -72,6 +72,13 @@
                         <span class="iconify w-3.5 h-3.5" data-icon="lucide:pencil"></span>
                         Edit
                     </a>
+                    <form action="{{ route('admin.users.test-notification', $user) }}" method="POST">
+                        @csrf
+                        <button type="submit" class="inline-flex items-center gap-1 text-xs font-medium text-muted-foreground hover:text-primary transition-colors">
+                            <span class="iconify w-3.5 h-3.5" data-icon="lucide:bell"></span>
+                            Test Push
+                        </button>
+                    </form>
                     <form action="{{ route('admin.users.destroy', $user) }}" method="POST"
                         onsubmit="return confirm('Delete {{ $user->name }}? This cannot be undone.');">
                         @csrf

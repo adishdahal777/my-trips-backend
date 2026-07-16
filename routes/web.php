@@ -52,6 +52,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::middleware(['auth', 'role:Super Admin'])->group(function () {
         Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
         Route::resource('users', UserController::class);
+        Route::post('users/{user}/test-notification', [UserController::class, 'testNotification'])->name('users.test-notification');
 
         Route::get('trips', [TripController::class, 'index'])->name('trips.index');
         Route::patch('trips/{trip}/toggle-featured', [TripController::class, 'toggleFeatured'])->name('trips.toggle-featured');

@@ -7,6 +7,14 @@
 
     <x-page-header title="{{ $user->name }}" subtitle="{{ $user->email }}" icon="lucide:user">
         <x-slot name="actions">
+            <form action="{{ route('admin.users.test-notification', $user) }}" method="POST">
+                @csrf
+                <button type="submit"
+                    class="inline-flex items-center gap-1.5 px-3 py-2 text-sm font-medium bg-card border border-border rounded-lg hover:bg-muted transition-colors">
+                    <span class="iconify w-4 h-4" data-icon="lucide:bell"></span>
+                    Send Test Push
+                </button>
+            </form>
             <a href="{{ route('admin.users.edit', $user) }}"
                 class="inline-flex items-center gap-1.5 px-3 py-2 text-sm font-medium bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity">
                 <span class="iconify w-4 h-4" data-icon="lucide:pencil"></span>
