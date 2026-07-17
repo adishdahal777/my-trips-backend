@@ -30,7 +30,7 @@ class ExpenseController extends Controller
             'currency' => 'nullable|string|max:3',
             'date' => 'required|date',
             'category' => 'required|string|max:255',
-            'icon' => 'nullable|string|max:10',
+            'icon' => 'nullable|string|max:50',
             'aiSuggested' => 'nullable|boolean',
             'isPrivate' => 'nullable|boolean',
         ]);
